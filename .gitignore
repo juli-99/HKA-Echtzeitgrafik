@@ -2,11 +2,9 @@
 
 /cmake
 /dll
-/include
 /lib
 /out
 /res
-/thirdparty
 /Echtzeitgrafik
 /.vs
 
