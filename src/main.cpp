@@ -1,4 +1,5 @@
 #include <iostream>
+#include <filesystem>
 
 #define GLEW_STATIC
 #include <GL/glew.h> // has to be included first!
@@ -8,12 +9,52 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include "helper/RootDir.h"
 #include "shared/data.h"
 #include "shared/functions.h"
 
+#include "Shader.hpp"
+
+
+
+
+namespace fs = std::filesystem;
+
 int main(int argc, char** argv) 
 {
+
+    std::cout << "HelloTriangleRetained" << std::endl;
+
+    GLFWwindow* window = initAndCreateWindow();
+    glViewport(0, 0, WIDTH, HEIGHT);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
+    
+    GLint shaderProgram = Shader::createShaderPipline(simpleVertexShaderSource, simpleFragmentShaderSource);
+    Shader::run(shaderProgram, window);
+    
+    
+}
+    
+
+    
+   
+
+
+
+    
+
+    //std::filesystem::path FileFrag = "../../../res/shader.frag";
+    //std::filesystem::path FileVert = "../../../res/shader.vert";
+    
+    //std::cout
+      //  << "The default working directory is:\n"
+        //<< std::filesystem::exists(FileFrag);
+
+    /*
     std::cout << "Hello World!" << std::endl;
+
 
     GLFWwindow* window = initAndCreateWindow();
     glViewport(0, 0, WIDTH, HEIGHT);
@@ -33,4 +74,4 @@ int main(int argc, char** argv)
 
     glfwTerminate();
     return 0;
-}
+}*/

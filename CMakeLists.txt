@@ -23,11 +23,11 @@ file(GLOB_RECURSE HEADER_FILES
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 # Configure assets header file
-configure_file(src/helper/RootDir.h.in src/helper/RootDir.h)
+configure_file(src/helper/RootDir.h src/helper/RootDir.h)
 include_directories(${CMAKE_BINARY_DIR}/src)
 
 # Define the executable
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} "src/shared/data.h" "src/shared/functions.h" "src/Shader.cpp")
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} "src/shared/data.h" "src/shared/functions.h"  "src/Shader.cpp")
 
 # Search for additional libraries
 find_package(OpenGL REQUIRED)
@@ -47,7 +47,7 @@ message(STATUS "Found GLEW in ${GLEW_INCLUDE_DIR}")
 find_package(Freetype REQUIRED)
 message(STATUS "Found Freetype in ${FREETYPE_INCLUDE_DIR}")
 
-add_library(STB_IMAGE "thirdparty/stb_image.cpp" "src/shared/data.h" "src/shared/functions.h" "src/Shader.cpp")
+add_library(STB_IMAGE "thirdparty/stb_image.cpp" "src/shared/data.h" "src/shared/functions.h"  "src/Shader.cpp")
 
 if(WIN32)
 	set(LIBS glfw3 opengl32 assimp glew32s freetype STB_IMAGE)
