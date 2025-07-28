@@ -33,8 +33,8 @@ GLFWwindow* initAndCreateWindow(bool debugContext = false) {
         std::cerr << "GLFW failed to create window." << std::endl;
         exit(EXIT_FAILURE);
     }
-
-    glfwMakeContextCurrent(window);
+    //initialize glew
+    glfwMakeContextCurrent(window); 
     if (glewInit() != GLEW_OK) {
         std::cerr << "GLFW failed to create window." << std::endl;
         glfwTerminate();

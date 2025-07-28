@@ -16,6 +16,21 @@ int main(int argc, char** argv)
     std::cout << "Hello World!" << std::endl;
 
     GLFWwindow* window = initAndCreateWindow();
-    (glViewport(0, 0, WIDTH, HEIGHT));
+    glViewport(0, 0, WIDTH, HEIGHT);
+
+    while (glfwWindowShouldClose(window) == 0)
+    {
+        // clear the window
+        glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // swap buffer
+        glfwSwapBuffers(window);
+
+        // process user events
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
     return 0;
 }
