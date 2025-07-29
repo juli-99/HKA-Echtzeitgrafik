@@ -61,3 +61,4 @@ GLFWwindow* initAndCreateWindow(bool debugContext = false) {
     return window;
 
 }
+

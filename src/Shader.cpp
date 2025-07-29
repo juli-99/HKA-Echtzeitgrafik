@@ -75,6 +75,8 @@ void Shader::createShaderPipline()
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
+        //glObjectLabel(GL_PROGRAM, shaderProgram, -1, "Shader Program"); //Debug
+        
         this->shaderProgram = shaderProgram;
 }
 

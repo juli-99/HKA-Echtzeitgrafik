@@ -36,10 +36,10 @@ int main(int argc, char** argv)
 {
     std::cout << "HelloTriangleRetained" << std::endl;
 
-    GLFWwindow* window = initAndCreateWindow();
+    GLFWwindow* window = initAndCreateWindow(true);
+
     glViewport(0, 0, WIDTH, HEIGHT);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
    
 
     Shader newShader;
@@ -59,17 +59,24 @@ int main(int argc, char** argv)
 
     buffer.unbind();
 
-   
-    
-
     newShader.use();
 
 
+
+
+    double prevTime = glfwGetTime();
+    int nbFrames = 0;
+
     while (glfwWindowShouldClose(window) == 0)
     {
+
+        nbFrames++;
         // clear the window
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        
+
 
         buffer.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -80,6 +87,19 @@ int main(int argc, char** argv)
 
         // process user events
         glfwPollEvents();
+
+        //FPS 
+        double time = glfwGetTime();
+        if (time - prevTime >= 1.0) {
+            
+            prevTime = time;
+            
+            std::cout << nbFrames << std::endl;
+            nbFrames = 0;
+
+        }
+        
+        
     }
 
     glfwTerminate();

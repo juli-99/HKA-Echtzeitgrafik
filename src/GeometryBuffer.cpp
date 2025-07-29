@@ -5,9 +5,13 @@ GeometryBuffer::GeometryBuffer(bool useElementBuffer)
     : vao_(0), vbo_(0), ebo_(0), hasEBO_(useElementBuffer)
 {
     glGenVertexArrays(1, &vao_);
+  
     glGenBuffers(1, &vbo_);
-    if (hasEBO_)
+
+    if (hasEBO_) {
         glGenBuffers(1, &ebo_);
+        
+    }
 }
 
 
@@ -40,6 +44,7 @@ GeometryBuffer& GeometryBuffer::operator=(GeometryBuffer&& other) noexcept
     return *this;
 };
 
+
 //Move-Konstruktor
 GeometryBuffer::GeometryBuffer(GeometryBuffer&& other) noexcept
     : vao_(other.vao_), vbo_(other.vbo_), ebo_(other.ebo_), hasEBO_(other.hasEBO_)
@@ -48,6 +53,7 @@ GeometryBuffer::GeometryBuffer(GeometryBuffer&& other) noexcept
     other.vbo_ = 0;
     other.ebo_ = 0;
     other.hasEBO_ = false;
+
 }
 
 
