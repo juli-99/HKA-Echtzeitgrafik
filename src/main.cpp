@@ -88,15 +88,13 @@ int main(int argc, char** argv)
         // process user events
         glfwPollEvents();
 
-        //FPS 
+        //FPS -> Wieso nur 60 fps?
         double time = glfwGetTime();
         if (time - prevTime >= 1.0) {
-            
             prevTime = time;
             
             std::cout << nbFrames << std::endl;
             nbFrames = 0;
-
         }
         
         
