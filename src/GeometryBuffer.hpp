@@ -14,6 +14,13 @@ public:
     GeometryBuffer(bool useElementBuffer = false);
     ~GeometryBuffer();
 
+    //Copy-Konstruktor deaktiviert
+    GeometryBuffer(const GeometryBuffer&) = delete;
+    //Copy-Assignment deaktiviert
+    GeometryBuffer& operator=(const GeometryBuffer&) = delete;
+    GeometryBuffer(GeometryBuffer&& other) noexcept;
+    GeometryBuffer& operator=(GeometryBuffer&& other) noexcept;
+
     void uploadVertexData(const void* data, GLsizeiptr size, GLenum usage = GL_STATIC_DRAW);
     void uploadIndexData(const void* data, GLsizeiptr size, GLenum usage = GL_STATIC_DRAW);
 
@@ -21,6 +28,8 @@ public:
     void unbind() const;
 
     GLuint getVAO() const { return vao_; }
+
+    
 
 private:
     GLuint vao_;

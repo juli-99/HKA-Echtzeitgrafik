@@ -10,10 +10,54 @@ GeometryBuffer::GeometryBuffer(bool useElementBuffer)
         glGenBuffers(1, &ebo_);
 }
 
+
+//Move-Assignment
+GeometryBuffer& GeometryBuffer::operator=(GeometryBuffer&& other) noexcept
+{
+    if (this != &other)
+    {
+        // Alte Ressourcen freigeben
+        if (hasEBO_ && ebo_ != 0)
+            glDeleteBuffers(1, &ebo_);
+        if (vbo_ != 0)
+            glDeleteBuffers(1, &vbo_);
+        if (vao_ != 0)
+            glDeleteVertexArrays(1, &vao_);
+
+        // Neue übernehmen
+        vao_ = other.vao_;
+        vbo_ = other.vbo_;
+        ebo_ = other.ebo_;
+        hasEBO_ = other.hasEBO_;
+
+        // Quelle leeren
+        other.vao_ = 0;
+        other.vbo_ = 0;
+        other.ebo_ = 0;
+        other.hasEBO_ = false;
+    }
+
+    return *this;
+};
+
+//Move-Konstruktor
+GeometryBuffer::GeometryBuffer(GeometryBuffer&& other) noexcept
+    : vao_(other.vao_), vbo_(other.vbo_), ebo_(other.ebo_), hasEBO_(other.hasEBO_)
+{
+    other.vao_ = 0;
+    other.vbo_ = 0;
+    other.ebo_ = 0;
+    other.hasEBO_ = false;
+}
+
+
+
 GeometryBuffer::~GeometryBuffer() {
-    if (hasEBO_)
+    if (hasEBO_ && ebo_ != 0)
         glDeleteBuffers(1, &ebo_);
+    if (vbo_ != 0)
     glDeleteBuffers(1, &vbo_);
+    if (vao_ != 0)
     glDeleteVertexArrays(1, &vao_);
 }
 
@@ -41,3 +85,4 @@ void GeometryBuffer::bind() const {
 void GeometryBuffer::unbind() const {
     glBindVertexArray(0);
 }
+
