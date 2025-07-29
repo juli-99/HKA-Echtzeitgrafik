@@ -1,3 +1,11 @@
+# Build paths
+/build
+/out
+
+# IDE config
+/.vs
+/.vscode
+
 # Prerequisites
 *.d
 
