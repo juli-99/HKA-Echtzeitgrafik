@@ -16,7 +16,7 @@ std::string Shader::loadShaderSource(std::string filepath)
 }
 
 
-GLint Shader::createShaderPipline()
+void Shader::createShaderPipline()
 {
         std::filesystem::path FileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
         std::filesystem::path FileVert = fs::path(ROOT_DIR) / "res/shader.vert";
@@ -34,8 +34,6 @@ GLint Shader::createShaderPipline()
 
         const GLchar* vertexSource = reVertexSource.c_str();
         const GLchar* fragmentSource = reFragmentSource.c_str();
-
-
 
    
         /* Vertex shader */
@@ -77,33 +75,41 @@ GLint Shader::createShaderPipline()
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
-        return shaderProgram;
+        this->shaderProgram = shaderProgram;
 }
 
 
-
+GLint Shader::getUniformLoc(const char* name)
+{
+    return glGetUniformLocation(this->shaderProgram, name);
+}
 
 void Shader::setUniform(GLint location, int value)
 {
-
+    glUniform1i(location, value);
 }
 
 void Shader::setUniform(GLint location, float value)
 {
-
+    glUniform1f(location, value);
 }
 
 void Shader::setUniform(GLint location, const glm::vec3& value)
 {
-
+    glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
 void Shader::setUniform(GLint location, const glm::vec4& value)
 {
-
+    glUniform4fv(location, 1, glm::value_ptr(value));
 }
 
 void Shader::setUniform(GLint location, const glm::mat4& value)
 {
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
 
+void Shader::use()
+{
+    glUseProgram(this->shaderProgram);
 }

@@ -42,9 +42,11 @@ int main(int argc, char** argv)
 
 
 
+    Shader newShader;
+
 
     
-    GLint shaderProgram = Shader::createShaderPipline();
+    newShader.createShaderPipline();
    
     GLuint vao, vbo;
     glGenVertexArrays(1, &vao);
@@ -61,7 +63,7 @@ int main(int argc, char** argv)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
 
-    glUseProgram(shaderProgram);
+    newShader.use();
 
     while (glfwWindowShouldClose(window) == 0)
     {
