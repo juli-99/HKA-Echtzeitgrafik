@@ -1,15 +1,42 @@
 #include "Shader.hpp"
 
-GLfloat triangle[] =
-{
-    // Position           Color   
-     0.9f, -0.9f, 0.0f,   1.0f, 0.0f, 0.0f,
-    -0.9f, -0.9f, 0.0f,   0.0f, 1.0f, 0.0f,
-     0.0f,  0.9f, 0.0f,   0.0f, 0.0f, 1.0f
-}; //sonst mehrfach erzeugt über class
 
-GLint Shader::createShaderPipline(const char* vertexSource, const char* fragmentSource)
+
+std::string Shader::loadShaderSource(std::string filepath)
 {
+    std::ifstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Failed to oben the Fail: " << filepath << std::endl;
+        return "";
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
+
+GLint Shader::createShaderPipline()
+{
+        std::filesystem::path FileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
+        std::filesystem::path FileVert = fs::path(ROOT_DIR) / "res/shader.vert";
+
+        std::string reVertexSource = loadShaderSource(FileVert.string());
+        std::string reFragmentSource = loadShaderSource(FileFrag.string());
+
+
+        if (reVertexSource.empty()) {
+            std::cerr << "Vertex shader source is empty! Path: " << FileVert << std::endl;
+        }
+        if (reFragmentSource.empty()) {
+            std::cerr << "Fragment shader source is empty! Path: " << FileFrag << std::endl;
+        }
+
+        const GLchar* vertexSource = reVertexSource.c_str();
+        const GLchar* fragmentSource = reFragmentSource.c_str();
+
+
+
    
         /* Vertex shader */
         GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -54,41 +81,29 @@ GLint Shader::createShaderPipline(const char* vertexSource, const char* fragment
 }
 
 
-void Shader::run(GLint shaderProgram, GLFWwindow* window)
+
+
+void Shader::setUniform(GLint location, int value)
 {
-    GLuint vao, vbo;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 
-    /* Position attribute */
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
+}
 
-    /* Color attribute */
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
+void Shader::setUniform(GLint location, float value)
+{
 
-    glUseProgram(shaderProgram);
+}
 
-    while (glfwWindowShouldClose(window) == 0)
-    {
-        // clear the window
-        glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+void Shader::setUniform(GLint location, const glm::vec3& value)
+{
 
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0);
+}
 
-        // swap buffer
-        glfwSwapBuffers(window);
+void Shader::setUniform(GLint location, const glm::vec4& value)
+{
 
-        // process user events
-        glfwPollEvents();
-    }
+}
 
-    glfwTerminate();
+void Shader::setUniform(GLint location, const glm::mat4& value)
+{
+
 }
