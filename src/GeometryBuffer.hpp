@@ -27,6 +27,8 @@ public:
     void bind() const;
     void unbind() const;
 
+    void LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset);
+
     GLuint getVAO() const { return vao_; }
 
     

@@ -21,7 +21,6 @@ namespace fs = std::filesystem;
 class Shader {
 private:
     GLint shaderProgram;
-
     
 
     

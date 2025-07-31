@@ -37,9 +37,11 @@ void Shader::createShaderPipline()
 
    
         /* Vertex shader */
-        GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        GLint vertexShader = glCreateShader(GL_VERTEX_SHADER); //-> Create Vertex Shader for Object
         glShaderSource(vertexShader, 1, &vertexSource, NULL);
-        glCompileShader(vertexShader);
+        glCompileShader(vertexShader); //Compile in machine code for cpu
+
+        //Check for success
         GLint success;
         GLchar infoLog[INFOLOG_LEN];
         glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -50,9 +52,11 @@ void Shader::createShaderPipline()
         }
 
         /* Fragment shader */
-        GLint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        GLint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER); //-> Creates Fragment Shader for Color
         glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
         glCompileShader(fragmentShader);
+
+        //Check for success
         glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
         if (!success)
         {
@@ -75,7 +79,7 @@ void Shader::createShaderPipline()
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
-        //glObjectLabel(GL_PROGRAM, shaderProgram, -1, "Shader Program"); //Debug
+        glObjectLabel(GL_PROGRAM, shaderProgram, -1, "Shader Program"); //Debug
         
         this->shaderProgram = shaderProgram;
 }

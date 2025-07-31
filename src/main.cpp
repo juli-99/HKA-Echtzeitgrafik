@@ -29,16 +29,34 @@ GLfloat triangle[] =
      0.0f,  0.9f, 0.0f,   0.0f, 0.0f, 1.0f
 }; //sonst mehrfach erzeugt über class
 
+float rectangle[] =
+{
+    // first triangle
+     0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // top right
+     0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // bottom right
+    -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // top left 
+    // second triangle
+     0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // bottom left
+    -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f  // top left
+};
+
+unsigned int indices[] =
+{  // note that we start from 0!
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+};
+
 
 
 
 int main(int argc, char** argv) 
 {
-    std::cout << "HelloTriangleRetained" << std::endl;
+    std::cout << "Hello Projekt" << std::endl;
 
     GLFWwindow* window = initAndCreateWindow(true);
 
-    glViewport(0, 0, WIDTH, HEIGHT);
+    glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    
 
@@ -46,23 +64,16 @@ int main(int argc, char** argv)
 
     newShader.createShaderPipline();
 
-    GeometryBuffer buffer(false);
+    /*Sending stuff between CPU und GPU with a Buffer Array (because it is really slow)*/
+    GeometryBuffer buffer(true);
 
-    buffer.uploadVertexData(triangle, sizeof(triangle));
-    buffer.bind();
+    buffer.uploadIndexData(indices, sizeof(indices));
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-
-    glEnableVertexAttribArray(1); // Farbe
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-
-    buffer.unbind();
+    buffer.uploadVertexData(rectangle, sizeof(rectangle));
+    buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
+    buffer.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
     newShader.use();
-
-
-
 
     double prevTime = glfwGetTime();
     int nbFrames = 0;
@@ -71,18 +82,17 @@ int main(int argc, char** argv)
     {
 
         nbFrames++;
-        // clear the window
+
+        // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        
-
 
         buffer.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
         buffer.unbind();
 
-        // swap buffer
+        // swap buffer -> back to front
         glfwSwapBuffers(window);
 
         // process user events
@@ -100,8 +110,9 @@ int main(int argc, char** argv)
         
     }
 
+
+    glfwDestroyWindow(window);
     glfwTerminate();
-    
     
 }
     

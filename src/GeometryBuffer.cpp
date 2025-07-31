@@ -1,12 +1,15 @@
 #include "GeometryBuffer.hpp"
 
 
+//vbo -> creates Buffer with data
+//vao -> pointer on one or more Buffers
+
 GeometryBuffer::GeometryBuffer(bool useElementBuffer)
     : vao_(0), vbo_(0), ebo_(0), hasEBO_(useElementBuffer)
 {
     glGenVertexArrays(1, &vao_);
   
-    glGenBuffers(1, &vbo_);
+    glGenBuffers(1, &vbo_); //1 for 1 Buffer for the Object, Reference
 
     if (hasEBO_) {
         glGenBuffers(1, &ebo_);
@@ -68,6 +71,8 @@ GeometryBuffer::~GeometryBuffer() {
 }
 
 void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum usage) {
+
+    /*We create a Buffer, everytime we fire a function that modify data of the object -> it will change the binded object */
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
     glBufferData(GL_ARRAY_BUFFER, size, data, usage);
@@ -90,5 +95,30 @@ void GeometryBuffer::bind() const {
 
 void GeometryBuffer::unbind() const {
     glBindVertexArray(0);
+}
+
+void GeometryBuffer::LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset)
+{
+    glBindVertexArray(vao_);
+    glEnableVertexAttribArray(layout);// Position of Vertex attribute
+    glVertexAttribPointer(layout, numComponents, type, GL_FALSE, string, offset); //Position of Vertex Attribute; Values per Vertex; Which Values Type; Coordinates as int; Data between each Vertex; Offset
+    glBindVertexArray(0);
+
+    /*
+    * 
+    buffer.bind();
+
+    glEnableVertexAttribArray(0);// Position of Vertex attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0); //Position of Vertex Attribute; Values per Vertex; Which Values Type; Coordinates as int; Data between each Vertex; Offset
+
+    /*Color
+    glEnableVertexAttribArray(1); // Position of Vertex attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
+    buffer.unbind();
+
+    */
+    
+
 }
 
