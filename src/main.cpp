@@ -114,22 +114,34 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
+
+std::filesystem::path fileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
+std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
+std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
+std::filesystem::path fileVert = fs::path(ROOT_DIR) / "res/shader.vert";
+
 int main(int argc, char** argv) 
 {
     std::cout << "Hello Projekt" << std::endl;
 
-    GLFWwindow* window = initAndCreateWindow(false);
+    GLFWwindow* window = initAndCreateWindow(true);
 
     glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, keyCallback);
+
+    //For the Light
+   Shader lightShader;
+    lightShader.createShaderPipline(fileFragLight, fileVertLight);
+    lightShader.use();
    
 
     Shader newShader;
 
-    newShader.createShaderPipline();
+    newShader.createShaderPipline(fileFrag, fileVert);
+    
 
     /*Sending stuff between CPU und GPU with a Buffer Array (because it is really slow)*/
     GeometryBuffer buffer(true);
@@ -164,6 +176,9 @@ int main(int argc, char** argv)
         //model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 
         view = glm::translate(view, -viewPos);
+        // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
+        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
         if (isPerspective) {
             projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
         }else 
@@ -184,8 +199,56 @@ int main(int argc, char** argv)
       
         int lightPosLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_lightPos");
         newShader.setUniform(lightPosLoc, lightPos);
-     
 
+
+        //Set Light Position
+        
+        struct PointLight {
+            glm::vec3 pos;
+            glm::vec3 color;
+            float constant;
+            float lin;
+            float quad;
+        };
+
+        PointLight pointLight;
+        pointLight.constant =  1.0;
+        pointLight.lin = 0.09;
+        pointLight.quad = 0.032;
+        pointLight.pos = glm::vec3(-1.0f, -5.0f, -4.0f);
+        pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+        int modelLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_model");
+        lightShader.setUniform(modelLoc2, model);
+
+        int viewLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_view");
+        lightShader.setUniform(viewLoc2, view);
+
+        int perspectiveLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_projection");
+        lightShader.setUniform(perspectiveLoc2, projection);
+
+        int viewPosLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_viewPos");
+        lightShader.setUniform(viewPosLoc2, viewPos);
+
+        int lightPosLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_lightPos");
+        lightShader.setUniform(lightPosLoc2, lightPos);
+
+        int constLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.constant");
+        lightShader.setUniform(constLoc, pointLight.constant);
+
+        int linLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.lin");
+        lightShader.setUniform(linLoc, pointLight.lin);
+
+        int quadLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.quad");
+        lightShader.setUniform(quadLoc, pointLight.quad);
+
+        int posLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.pos");
+        lightShader.setUniform(posLoc, pointLight.pos);
+
+        int colorLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.color");
+        lightShader.setUniform(colorLoc, pointLight.color);
+     
+     
 
         buffer.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies

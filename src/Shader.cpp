@@ -16,20 +16,19 @@ std::string Shader::loadShaderSource(std::string filepath)
 }
 
 
-void Shader::createShaderPipline()
+void Shader::createShaderPipline(std::filesystem::path fileFrag, std::filesystem::path fileVert)
 {
-        std::filesystem::path FileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
-        std::filesystem::path FileVert = fs::path(ROOT_DIR) / "res/shader.vert";
+        
 
-        std::string reVertexSource = loadShaderSource(FileVert.string());
-        std::string reFragmentSource = loadShaderSource(FileFrag.string());
+        std::string reVertexSource = loadShaderSource(fileVert.string());
+        std::string reFragmentSource = loadShaderSource(fileFrag.string());
 
 
         if (reVertexSource.empty()) {
-            std::cerr << "Vertex shader source is empty! Path: " << FileVert << std::endl;
+            std::cerr << "Vertex shader source is empty! Path: " << fileVert << std::endl;
         }
         if (reFragmentSource.empty()) {
-            std::cerr << "Fragment shader source is empty! Path: " << FileFrag << std::endl;
+            std::cerr << "Fragment shader source is empty! Path: " << fileFrag << std::endl;
         }
 
         const GLchar* vertexSource = reVertexSource.c_str();

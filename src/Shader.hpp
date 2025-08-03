@@ -28,7 +28,7 @@ private:
 public: 
 
     GLint getUniformLoc(const char* name);
-	void createShaderPipline();
+	void createShaderPipline(std::filesystem::path FileFrag, std::filesystem::path FileVert);
     void setUniform(GLint location, int value);
     void setUniform(GLint location, float value);
     void setUniform(GLint location, const glm::vec3& value);
