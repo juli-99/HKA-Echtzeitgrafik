@@ -20,3 +20,36 @@ Planet::Planet(const std::string& name,
 const std::string& Planet::getName() const {
     return name;
 }
+
+float Planet::getDayLength() const {
+    return dayLength;
+}
+
+float Planet::getOrbitalSpeed() const {
+    return orbitalSpeed;
+}
+
+float Planet::getDistanceFromSun() const {
+    return distanceFromSun;
+}
+
+float Planet::getScale() const {
+    return scale;
+}
+
+bool Planet::isRetrograde() const {
+    return retrograde;
+}
+
+const GeometryBuffer& Planet::getGeometry() const {
+    return geometry;
+}
+
+float Planet::getCurrentRotationAngle() const {
+    return currentRotationAngle;
+}
+
+float Planet::getCurrentOrbitAngle() const {
+    return currentOrbitAngle;
+}
+

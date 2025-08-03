@@ -14,6 +14,14 @@ public:
         const GeometryBuffer& geometry);
 
     const std::string& getName() const;
+    float getDayLength() const;
+    float getOrbitalSpeed() const;
+    float getDistanceFromSun() const;
+    float getScale() const;
+    bool isRetrograde() const;
+    const GeometryBuffer& getGeometry() const;
+    float getCurrentRotationAngle() const;
+    float getCurrentOrbitAngle() const;
 
 private:
     std::string name;
