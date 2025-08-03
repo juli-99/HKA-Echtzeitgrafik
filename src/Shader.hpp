@@ -35,4 +35,5 @@ public:
     void setUniform(GLint location, const glm::vec4& value);
     void setUniform(GLint location, const glm::mat4& value);
     void use();
+    GLint getShaderProgram();
 };

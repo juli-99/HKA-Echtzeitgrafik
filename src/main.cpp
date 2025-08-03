@@ -20,6 +20,56 @@
 #include "GeometryBuffer.hpp"
 
 
+float cubePhong[] = {
+    // Position           Normal
+    // Back face
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+
+    // Front face
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
+
+    // Left face
+    -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,
+
+    // Right face
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,
+
+     // Bottom face
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f,
+
+    // Top face
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+};
 
 GLfloat triangle[] =
 {
@@ -50,14 +100,31 @@ unsigned int indices[] =
 
 
 
+bool isPerspective = true;
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && isPerspective == false)
+    {
+        isPerspective = true;
+    }
+    else if(key == GLFW_KEY_SPACE && action == GLFW_PRESS && isPerspective == true) {
+        isPerspective = false;
+    }
+}
+
 int main(int argc, char** argv) 
 {
     std::cout << "Hello Projekt" << std::endl;
 
-    GLFWwindow* window = initAndCreateWindow(true);
+    GLFWwindow* window = initAndCreateWindow(false);
 
     glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_DEPTH_TEST);
+    glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyCallback);
    
 
     Shader newShader;
@@ -67,9 +134,9 @@ int main(int argc, char** argv)
     /*Sending stuff between CPU und GPU with a Buffer Array (because it is really slow)*/
     GeometryBuffer buffer(true);
 
-    buffer.uploadIndexData(indices, sizeof(indices));
+    //buffer.uploadIndexData(indices, sizeof(indices));
 
-    buffer.uploadVertexData(rectangle, sizeof(rectangle));
+    buffer.uploadVertexData(cubePhong, sizeof(cubePhong));
     buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
     buffer.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
@@ -78,6 +145,9 @@ int main(int argc, char** argv)
     double prevTime = glfwGetTime();
     int nbFrames = 0;
 
+    glm::vec3 viewPos(0.0f, 0.0f, 6.0f);
+    glm::vec3 lightPos(0.0f, -2.0f, 3.0f); //x,y,z
+
     while (glfwWindowShouldClose(window) == 0)
     {
 
@@ -85,11 +155,40 @@ int main(int argc, char** argv)
 
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Calculate matrices
+        glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
+        glm::mat4 projection;
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+        //model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+
+        view = glm::translate(view, -viewPos);
+        if (isPerspective) {
+            projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
+        }else 
+        projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 1000.0f);
+
+        // Setting uniforms
+        int modelLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_model");
+        newShader.setUniform(modelLoc, model);
+     
+        int viewLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_view");
+        newShader.setUniform(viewLoc, view);
+ 
+        int perspectiveLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_projection");
+        newShader.setUniform(perspectiveLoc, projection);
+    
+        int viewPosLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_viewPos");
+        newShader.setUniform(viewPosLoc, viewPos);
+      
+        int lightPosLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_lightPos");
+        newShader.setUniform(lightPosLoc, lightPos);
+     
 
 
         buffer.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
+        glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
         buffer.unbind();
 
         // swap buffer -> back to front

@@ -119,3 +119,7 @@ void Shader::use()
 {
     glUseProgram(this->shaderProgram);
 }
+
+GLint Shader::getShaderProgram() {
+    return this->shaderProgram;
+}
