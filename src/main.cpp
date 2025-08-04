@@ -83,6 +83,8 @@ unsigned int indices[] =
 
 
 bool isPerspective = true;
+bool topView = false;
+float distance = 9.0f;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -90,8 +92,19 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
         isPerspective = !isPerspective;
     }
+
+    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+        topView = !topView;
+    }
 }
 
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    distance -= (float) yoffset;
+    if (distance < 2.0f)
+        distance = 2.0f;
+    if (distance > 40.0f)
+        distance = 40.0f;
+}
 
 std::filesystem::path fileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
 std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
@@ -112,6 +125,7 @@ int main(int argc, char** argv)
     glEnable(GL_DEPTH_TEST);
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, keyCallback);
+    glfwSetScrollCallback(window, scrollCallback);
 
     //For the Light
     Shader lightShader;
@@ -142,7 +156,6 @@ int main(int argc, char** argv)
     const float orbitSpeedScale = 1.0f;
     const float rotationSpeedScale = 0.01f;
 
-    const glm::vec3 viewPos(0.0f, -9.0f, -9.0f);
     const glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
     // get uniform locations
@@ -203,14 +216,24 @@ int main(int argc, char** argv)
 
             // Move the camera backwards, so the objects becomes visible
             glm::mat4 view = glm::mat4(1.0f);
-            view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            view = glm::translate(view, viewPos);
+            glm::vec3 viewPos;
+            if (topView) {
+                viewPos = glm::vec3(0.0f, -distance, 0.0f);
+                view = glm::rotate(view, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                view = glm::translate(view, viewPos);
+            } else {
+                viewPos = glm::vec3(0.0f, -distance, -distance);
+                view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                view = glm::translate(view, viewPos);
+            }
 
             glm::mat4 projection;
             if (isPerspective)
                 projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
-            else
-                projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 1000.0f);
+            else {
+                float tmpDist = distance / 9; // fix scaling
+                projection = glm::ortho(-4.0f * tmpDist, 4.0f * tmpDist, -3.0f * tmpDist, 3.0f * tmpDist, 0.1f, 1000.0f);
+            }
 
             // Setting uniforms
             newShader.setUniform(modelLoc, model);
@@ -224,8 +247,8 @@ int main(int argc, char** argv)
             lightShader.setUniform(modelLoc2, model);
             lightShader.setUniform(viewLoc2, view);
             lightShader.setUniform(perspectiveLoc2, projection);
-
             lightShader.setUniform(viewPosLoc2, viewPos);
+
             lightShader.setUniform(posLoc, pointLight.pos);
             lightShader.setUniform(constLoc, pointLight.constant);
             lightShader.setUniform(linLoc, pointLight.lin);
