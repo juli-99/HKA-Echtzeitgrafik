@@ -18,6 +18,8 @@
 
 #include "Shader.hpp"
 #include "GeometryBuffer.hpp"
+#include "Planet.hpp"
+#include "SolarSystem.hpp"
 
 
 float cubePhong[] = {
@@ -85,12 +87,8 @@ bool isPerspective = true;
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && isPerspective == false)
-    {
-        isPerspective = true;
-    }
-    else if(key == GLFW_KEY_SPACE && action == GLFW_PRESS && isPerspective == true) {
-        isPerspective = false;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        isPerspective = !isPerspective;
     }
 }
 
@@ -167,7 +165,7 @@ int main(int argc, char** argv)
     pointLight.constant =  1.0;
     pointLight.lin = 0.09;
     pointLight.quad = 0.032;
-    pointLight.pos = glm::vec3(0.0f, -2.0f, 3.0f);
+    pointLight.pos = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
 
     while (glfwWindowShouldClose(window) == 0)
@@ -177,46 +175,52 @@ int main(int argc, char** argv)
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Calculate matrices
-        glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
-        glm::mat4 projection;
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-
-    
-        //view = glm::translate(view, -viewPos);
-        // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-        if (isPerspective) {
-            projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
-        }else 
-        projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 1000.0f);
-
-        // Setting uniforms
-        newShader.setUniform(modelLoc, model);
-        newShader.setUniform(viewLoc, view);
-        newShader.setUniform(perspectiveLoc, projection);
-        newShader.setUniform(viewPosLoc, viewPos);
-
-        //Set Light Position
-        lightShader.use();//-> das muss irgendwie fuer das danach
-
-        lightShader.setUniform(modelLoc2, model);
-        lightShader.setUniform(viewLoc2, view);
-        lightShader.setUniform(perspectiveLoc2, projection);
-
-        lightShader.setUniform(viewPosLoc2, viewPos);
-        lightShader.setUniform(posLoc, pointLight.pos);
-        lightShader.setUniform(constLoc, pointLight.constant);
-        lightShader.setUniform(linLoc, pointLight.lin);
-        lightShader.setUniform(quadLoc, pointLight.quad);
-        lightShader.setUniform(colorLoc, pointLight.color);
+        for (int i = 0; i < 5; i++) {
+            // Calculate matrices
+            glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
+            glm::mat4 projection;
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f)*i, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(0.3f*i, 0.0f, 0.0f));
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f)*i, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 
 
-        buffer.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
-        buffer.unbind();
+            //view = glm::translate(view, -viewPos);
+            // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
+            view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            view = glm::translate(view, glm::vec3(0.0f, -3.0f, -3.0f));
+
+            if (isPerspective) {
+                projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
+            }
+            else
+                projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 1000.0f);
+
+            // Setting uniforms
+            newShader.setUniform(modelLoc, model);
+            newShader.setUniform(viewLoc, view);
+            newShader.setUniform(perspectiveLoc, projection);
+            newShader.setUniform(viewPosLoc, viewPos);
+
+            //Set Light Position
+            lightShader.use();//-> das muss irgendwie fuer das danach
+
+            lightShader.setUniform(modelLoc2, model);
+            lightShader.setUniform(viewLoc2, view);
+            lightShader.setUniform(perspectiveLoc2, projection);
+
+            lightShader.setUniform(viewPosLoc2, viewPos);
+            lightShader.setUniform(posLoc, pointLight.pos);
+            lightShader.setUniform(constLoc, pointLight.constant);
+            lightShader.setUniform(linLoc, pointLight.lin);
+            lightShader.setUniform(quadLoc, pointLight.quad);
+            lightShader.setUniform(colorLoc, pointLight.color);
+
+
+            buffer.bind();
+            glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
+            buffer.unbind();
+        }
 
         // swap buffer -> back to front
         glfwSwapBuffers(window);
