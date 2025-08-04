@@ -6,8 +6,8 @@ Planet::Planet(const std::string& name,
     float orbitalSpeedKms,
     float distanceFromSunMillionKm,
     float scale,
-    bool retrogradeRotation,
-    GeometryBuffer* geometry)
+    bool retrogradeRotation)//,
+//    GeometryBuffer* geometry)
     : name(name),
     dayLength(dayLengthMinutes),
     orbitalSpeed(orbitalSpeedKms),
@@ -16,7 +16,7 @@ Planet::Planet(const std::string& name,
     retrograde(retrogradeRotation)//,
 //    geometry(geometry)
 {
-    this->geometry = geometry;
+//    this->geometry = geometry;
 }
 
 const std::string& Planet::getName() const {
@@ -43,6 +43,6 @@ bool Planet::isRetrograde() const {
     return retrograde;
 }
 
-GeometryBuffer* Planet::getGeometry() const {
-    return geometry;
-}
+//GeometryBuffer* Planet::getGeometry() const {
+//    return geometry;
+//}

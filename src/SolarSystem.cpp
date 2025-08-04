@@ -1,6 +1,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <iostream>
+#include <filesystem>
 
 #include "SolarSystem.hpp"
 
@@ -24,16 +25,21 @@ static constexpr struct PlanetData {
     { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false}
 };
 
-SolarSystem::SolarSystem(const std::string& spherePath) {
+SolarSystem::SolarSystem(const std::filesystem::path& spherePath) {
+    std::cout << "before loadMesh" << std::endl;
     loadMesh(spherePath);
+    std::cout << "after loadMesh|before initPlanets" << std::endl;
     initPlanets();
+    std::cout << "after initPlanets" << std::endl;
 }
 
 SolarSystem::~SolarSystem() {}
 
-void SolarSystem::loadMesh(const std::string& path) {
+void SolarSystem::loadMesh(const std::filesystem::path& path) {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path,
+
+    //TODO temp hack for testing
+    const aiScene* scene = importer.ReadFile("/home/user/Documents/20-Education/22-Studium_Bachelor/22.02-INFB/WPF/Echtzeitgrafik/HKA-Echtzeitgrafik/res/sphere.obj",//path.string(),
           aiProcess_CalcTangentSpace
         | aiProcess_Triangulate
         | aiProcess_JoinIdenticalVertices
@@ -88,7 +94,7 @@ void SolarSystem::processMesh(const aiScene* scene) {
         }
     }
 
-    sharedGeometry = GeometryBuffer(vertices, indices);
+//    this->sharedGeometry = GeometryBuffer(vertices, indices);
     //GeometryBuffer buffer = GeometryBuffer(false);
     //buffer.uploadVertexData();
     //buffer.uploadIndexData();
@@ -103,8 +109,8 @@ void SolarSystem::initPlanets() {
             data.orbitalSpeed,
             data.distance,
             data.scale,
-            data.retrograde,
-            &sharedGeometry
+            data.retrograde//,
+//            &sharedGeometry
         );
     }
 }
