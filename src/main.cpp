@@ -98,6 +98,9 @@ std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader
 std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
 std::filesystem::path fileVert = fs::path(ROOT_DIR) / "res/shader.vert";
 
+std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
+
+
 int main(int argc, char** argv) 
 {
     std::cout << "Hello Projekt" << std::endl;
@@ -134,8 +137,13 @@ int main(int argc, char** argv)
     double prevTime = glfwGetTime();
     int nbFrames = 0;
 
-    glm::vec3 viewPos(0.0f, 0.0f, 6.0f);
-    glm::vec3 lightPos(0.0f, -2.0f, 3.0f); //x,y,z
+
+    const float distanceScale = 0.01f;
+    const float orbitSpeedScale = 1.0f;
+    const float rotationSpeedScale = 0.01f;
+
+    const glm::vec3 viewPos(0.0f, -9.0f, -9.0f);
+    const glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
     // get uniform locations
     const int modelLoc = newShader.getUniformLoc("u_model");
@@ -165,34 +173,42 @@ int main(int argc, char** argv)
     pointLight.constant =  1.0;
     pointLight.lin = 0.09;
     pointLight.quad = 0.032;
-    pointLight.pos = glm::vec3(0.0f, 0.0f, 0.0f);
+    pointLight.pos = lightPos;
     pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+    SolarSystem solarSystem = SolarSystem(fileSphere);
 
     while (glfwWindowShouldClose(window) == 0)
     {
+        float currTime = (float)glfwGetTime();
         newShader.use();
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (int i = 0; i < 5; i++) {
+        for (const Planet& planet : solarSystem.getPlanets()) {
+            float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
+            angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
+            if (planet.isRetrograde())
+                angularvelocity_self = -angularvelocity_self;
+            float angularvelocity_sun = planet.getOrbitalSpeed() / planet.getDistanceFromSun();
+
             // Calculate matrices
-            glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
-            glm::mat4 projection;
-            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f)*i, glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::translate(model, glm::vec3(0.3f*i, 0.0f, 0.0f));
-            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f)*i, glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::rotate(model, angularvelocity_sun * orbitSpeedScale * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(planet.getDistanceFromSun() * distanceScale, 0.0f, 0.0f));
+            model = glm::rotate(model, angularvelocity_self * rotationSpeedScale * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(planet.getScale()));
 
 
-            //view = glm::translate(view, -viewPos);
-            // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
+            // Move the camera backwards, so the objects becomes visible
+            glm::mat4 view = glm::mat4(1.0f);
             view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            view = glm::translate(view, glm::vec3(0.0f, -3.0f, -3.0f));
+            view = glm::translate(view, viewPos);
 
-            if (isPerspective) {
+            glm::mat4 projection;
+            if (isPerspective)
                 projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
-            }
             else
                 projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 1000.0f);
 
