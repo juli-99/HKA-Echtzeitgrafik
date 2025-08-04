@@ -115,8 +115,6 @@ int main(int argc, char** argv)
     //For the Light
     Shader lightShader;
     lightShader.createShaderPipline(fileFragLight, fileVertLight);
-    
-   
 
     Shader newShader;
 
@@ -132,7 +130,7 @@ int main(int argc, char** argv)
     buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
     buffer.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
-    newShader.use();
+//    newShader.use();
     
 
     double prevTime = glfwGetTime();
@@ -141,10 +139,39 @@ int main(int argc, char** argv)
     glm::vec3 viewPos(0.0f, 0.0f, 6.0f);
     glm::vec3 lightPos(0.0f, -2.0f, 3.0f); //x,y,z
 
+    // get uniform locations
+    const int modelLoc = newShader.getUniformLoc("u_model");
+    const int viewLoc = newShader.getUniformLoc("u_view");
+    const int perspectiveLoc = newShader.getUniformLoc("u_projection");
+    const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
+
+    const int modelLoc2 = lightShader.getUniformLoc("u_model");
+    const int viewLoc2 = lightShader.getUniformLoc("u_view");
+    const int perspectiveLoc2 = lightShader.getUniformLoc("u_projection");
+    const int viewPosLoc2 = lightShader.getUniformLoc("u_viewPos");
+    const int posLoc = lightShader.getUniformLoc("u_Light.pos");
+    const int constLoc = lightShader.getUniformLoc("u_Light.constant");
+    const int linLoc = lightShader.getUniformLoc("u_Light.lin");
+    const int quadLoc = lightShader.getUniformLoc("u_Light.quad");
+    const int colorLoc = lightShader.getUniformLoc("u_Light.color");
+
+    struct PointLight {
+        glm::vec3 pos;
+        glm::vec3 color;
+        float constant;
+        float lin;
+        float quad;
+    };
+
+    PointLight pointLight;
+    pointLight.constant =  1.0;
+    pointLight.lin = 0.09;
+    pointLight.quad = 0.032;
+    pointLight.pos = glm::vec3(0.0f, -2.0f, 3.0f);
+    pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+
     while (glfwWindowShouldClose(window) == 0)
     {
-
-        nbFrames++;
         newShader.use();
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
@@ -167,68 +194,25 @@ int main(int argc, char** argv)
         projection = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.1f, 1000.0f);
 
         // Setting uniforms
-        int modelLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_model");
         newShader.setUniform(modelLoc, model);
-     
-        int viewLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_view");
         newShader.setUniform(viewLoc, view);
- 
-        int perspectiveLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_projection");
         newShader.setUniform(perspectiveLoc, projection);
-    
-        int viewPosLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_viewPos");
         newShader.setUniform(viewPosLoc, viewPos);
-      
-        
-
 
         //Set Light Position
-        
-        lightShader.use();//-> das muss irgendwie fuer das danach 
-        struct PointLight {
-            glm::vec3 pos;
-            glm::vec3 color;
-            float constant;
-            float lin;
-            float quad;
-        };
+        lightShader.use();//-> das muss irgendwie fuer das danach
 
-        PointLight pointLight;
-        pointLight.constant =  1.0;
-        pointLight.lin = 0.09;
-        pointLight.quad = 0.032;
-        pointLight.pos = glm::vec3(0.0f, -2.0f, 3.0f);
-        pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
-
-        int modelLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_model");
         lightShader.setUniform(modelLoc2, model);
-
-        int viewLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_view");
         lightShader.setUniform(viewLoc2, view);
-
-        int perspectiveLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_projection");
         lightShader.setUniform(perspectiveLoc2, projection);
 
-        int viewPosLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_viewPos");
         lightShader.setUniform(viewPosLoc2, viewPos);
-
-        int posLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.pos");
         lightShader.setUniform(posLoc, pointLight.pos);
-        
-        int constLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.constant");
         lightShader.setUniform(constLoc, pointLight.constant);
-
-        int linLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.lin");
         lightShader.setUniform(linLoc, pointLight.lin);
-
-        int quadLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.quad");
         lightShader.setUniform(quadLoc, pointLight.quad);
-
-
-        int colorLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.color");
         lightShader.setUniform(colorLoc, pointLight.color);
-     
-     
+
 
         buffer.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
@@ -240,7 +224,8 @@ int main(int argc, char** argv)
         // process user events
         glfwPollEvents();
 
-        //FPS -> Wieso nur 60 fps?
+        //FPS
+        nbFrames++;
         double time = glfwGetTime();
         if (time - prevTime >= 1.0) {
             prevTime = time;
@@ -257,4 +242,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     
 }
-    
