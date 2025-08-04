@@ -71,26 +71,6 @@ float cubePhong[] = {
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
 };
 
-GLfloat triangle[] =
-{
-    // Position           Color   
-     0.9f, -0.9f, 0.0f,   1.0f, 0.0f, 0.0f,
-    -0.9f, -0.9f, 0.0f,   0.0f, 1.0f, 0.0f,
-     0.0f,  0.9f, 0.0f,   0.0f, 0.0f, 1.0f
-}; //sonst mehrfach erzeugt über class
-
-float rectangle[] =
-{
-    // first triangle
-     0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // top right
-     0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // bottom right
-    -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // top left 
-    // second triangle
-     0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // bottom left
-    -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f  // top left
-};
-
 unsigned int indices[] =
 {  // note that we start from 0!
     0, 1, 3,   // first triangle
@@ -204,7 +184,7 @@ int main(int argc, char** argv)
 
         //Set Light Position
         
-        lightShader.use();//-> das muss irgendwie für das danach 
+        lightShader.use();//-> das muss irgendwie fuer das danach 
         struct PointLight {
             glm::vec3 pos;
             glm::vec3 color;
