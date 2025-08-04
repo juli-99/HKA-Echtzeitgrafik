@@ -39,7 +39,7 @@ void SolarSystem::loadMesh(const std::filesystem::path& path) {
     Assimp::Importer importer;
 
     //TODO temp hack for testing
-    const aiScene* scene = importer.ReadFile("/home/user/Documents/20-Education/22-Studium_Bachelor/22.02-INFB/WPF/Echtzeitgrafik/HKA-Echtzeitgrafik/res/sphere.obj",//path.string(),
+    const aiScene* scene = importer.ReadFile(path.string(),
           aiProcess_CalcTangentSpace
         | aiProcess_Triangulate
         | aiProcess_JoinIdenticalVertices
