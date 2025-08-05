@@ -13,8 +13,7 @@
 #include FT_FREETYPE_H
 
 #include "helper/RootDir.h"
-#include "shared/data.h"
-#include "shared/functions.h"
+#include "init.hpp"
 
 #include "Shader.hpp"
 #include "GeometryBuffer.hpp"
@@ -23,11 +22,11 @@
 #include "PointLight.hpp"
 
 
+static const GLuint WIDTH = 1024, HEIGHT = 1024;
+
 bool isPerspective = true;
 bool topView = false;
 float distance = 9.0f;
-
-
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -66,7 +65,7 @@ int main(int argc, char** argv)
 
     std::cout << "Hello Projekt" << std::endl;
 
-    GLFWwindow* window = initAndCreateWindow(true);
+    GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, true);
 
     glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
