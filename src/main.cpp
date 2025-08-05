@@ -155,16 +155,6 @@ int main(int argc, char** argv)
     const int perspectiveLoc = newShader.getUniformLoc("u_projection");
     const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
 
-    const int modelLoc2 = lightShader.getUniformLoc("u_model");
-    const int viewLoc2 = lightShader.getUniformLoc("u_view");
-    const int perspectiveLoc2 = lightShader.getUniformLoc("u_projection");
-    const int viewPosLoc2 = lightShader.getUniformLoc("u_viewPos");
-    const int posLoc = lightShader.getUniformLoc("u_Light.pos");
-    const int constLoc = lightShader.getUniformLoc("u_Light.constant");
-    const int linLoc = lightShader.getUniformLoc("u_Light.lin");
-    const int quadLoc = lightShader.getUniformLoc("u_Light.quad");
-    const int colorLoc = lightShader.getUniformLoc("u_Light.color");
-
     PointLight pointLight;
 
     SolarSystem solarSystem = SolarSystem(fileSphere);
