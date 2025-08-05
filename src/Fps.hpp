@@ -10,6 +10,7 @@ class Fps {
 public:
 	Fps(std::function<void(int)> callback);
 	void start();
+	void stop();
 	void countFrame();
 private:
 	std::function<void(int)> callback;
