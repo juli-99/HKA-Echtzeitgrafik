@@ -1,11 +1,6 @@
 #include "PointLight.hpp"
 
 
-
-
-
-
-
 std::map<int, std::vector<float>> attenuation= {
 	{7, {1.0, 0.7, 1.8}},
 	{13, {1.0, 0.35, 0.44}},

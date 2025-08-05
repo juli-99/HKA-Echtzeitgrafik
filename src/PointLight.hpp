@@ -25,11 +25,4 @@ public:
     void setView(Shader shader, glm::mat4 view);
     void setProjection(Shader shader, glm::mat4 projection);
     void setViewPos(Shader shader, glm::vec3 viewPos);
-
-
-    
-
-
-
-
 };
