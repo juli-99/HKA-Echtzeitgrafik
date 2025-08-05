@@ -23,10 +23,19 @@
 
 
 static const GLuint WIDTH = 1024, HEIGHT = 1024;
+static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 9.0f;
+
+static const std::filesystem::path fileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
+static const std::filesystem::path fileVert = fs::path(ROOT_DIR) / "res/shader.vert";
+static const std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
+static const std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
+
+static const std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
+
 
 bool isPerspective = true;
 bool topView = false;
-float distance = 9.0f;
+float distance = DEFAULT_DISTANCE;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -34,7 +43,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
         isPerspective = !isPerspective;
     }
-
     if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
         topView = !topView;
     }
@@ -42,20 +50,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     distance -= (float)yoffset;
-    if (distance < 2.0f)
-        distance = 2.0f;
-    if (distance > 40.0f)
-        distance = 40.0f;
+    if (distance < MIN_DISTANCE)
+        distance = MIN_DISTANCE;
+    if (distance > MAX_DISTANCE)
+        distance = MAX_DISTANCE;
 }
-
-
-std::filesystem::path fileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
-std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
-std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
-std::filesystem::path fileVert = fs::path(ROOT_DIR) / "res/shader.vert";
-
-std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
-
 
 int main(int argc, char** argv) 
 {
@@ -104,8 +103,8 @@ int main(int argc, char** argv)
     {
         float currTime = (float)glfwGetTime();
 
-        nbFrames++;
         newShader.use();
+
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -194,19 +193,16 @@ int main(int argc, char** argv)
 
         //FPS -> Wieso nur 60 fps?
         double time = glfwGetTime();
+        nbFrames++;
         if (time - prevTime >= 1.0) {
             prevTime = time;
             
             std::cout << nbFrames << std::endl;
             nbFrames = 0;
         }
-        
-        
     }
-
 
     glfwDestroyWindow(window);
     glfwTerminate();
-    
 }
     
