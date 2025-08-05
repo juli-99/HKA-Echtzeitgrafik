@@ -1,18 +1,11 @@
 #pragma once
 
 #include <iostream>
-#include <filesystem>
 
-#include <GL/glew.h> 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <stb_image.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
 
-#include "helper/RootDir.h"
-
-GLFWwindow* initAndCreateWindow(bool debugContext = false) {
+GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext = false) {
     GLFWwindow* window; //create new Window
 
     if (glfwInit() == 0) { //Create Window faild?	
@@ -26,7 +19,7 @@ GLFWwindow* initAndCreateWindow(bool debugContext = false) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, debugContext);
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Echtzeitgrafik-Projekt", nullptr, nullptr);
+    window = glfwCreateWindow(width, height, "Echtzeitgrafik-Projekt", nullptr, nullptr);
 
     //checking id window was created successfully
     if (window == nullptr) {
@@ -34,7 +27,7 @@ GLFWwindow* initAndCreateWindow(bool debugContext = false) {
         exit(EXIT_FAILURE);
     }
     //initialize glew
-    glfwMakeContextCurrent(window); 
+    glfwMakeContextCurrent(window);
     if (glewInit() != GLEW_OK) {
         std::cerr << "GLFW failed to create window." << std::endl;
         glfwTerminate();
@@ -61,4 +54,3 @@ GLFWwindow* initAndCreateWindow(bool debugContext = false) {
     return window;
 
 }
-

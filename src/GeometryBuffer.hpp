@@ -6,6 +6,11 @@
 #include <glm/glm.hpp>
 #include <ft2build.h>
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+
 
 class GeometryBuffer {
 
@@ -31,6 +36,12 @@ public:
 
     GLuint getVAO() const { return vao_; }
 
+    int getSizeVertex();
+    int getSizeIndices();
+
+    void setSizeIndices(GLsizei indicesSize);
+    void setSizeVertex(GLsizei vertexSize);
+
     
 
 private:
@@ -38,4 +49,8 @@ private:
     GLuint vbo_;
     GLuint ebo_;
     bool hasEBO_;
+
+    GLsizei vertexSize;
+    GLsizei indicesSize;
+
 };
