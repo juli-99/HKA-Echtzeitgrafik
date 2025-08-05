@@ -62,8 +62,6 @@ int main(int argc, char** argv)
     const float orbitSpeedScale = 1.0f;
     const float rotationSpeedScale = 0.01f;
 
-    std::cout << "Hello Projekt" << std::endl;
-
     GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, true);
 
     glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
@@ -78,15 +76,14 @@ int main(int argc, char** argv)
     lightShader.createShaderPipline(fileFragLight, fileVertLight);
     
    
-
     Shader newShader;
     newShader.createShaderPipline(fileFrag, fileVert);
     newShader.use();
 
-    const int modelLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_model");
-    const int viewLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_view");
-    const int perspectiveLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_projection");
-    const int viewPosLoc = glGetUniformLocation(newShader.getShaderProgram(), "u_viewPos");
+    const int modelLoc = newShader.getUniformLoc("u_model");
+    const int viewLoc = newShader.getUniformLoc("u_view");
+    const int perspectiveLoc = newShader.getUniformLoc("u_projection");
+    const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
 
     double prevTime = glfwGetTime();
     int nbFrames = 0;
@@ -162,8 +159,6 @@ int main(int argc, char** argv)
 
             lightShader.use();
 
-            
-
             PointLight pointerLight;
 
             pointerLight.setModel(lightShader, model);
@@ -176,8 +171,6 @@ int main(int argc, char** argv)
             pointerLight.setColor(lightShader, lightColor);
             
 
-
-          
 
             planet.getGeometry()->bind();
             glDrawElements(GL_TRIANGLES, planet.getGeometry()->getSizeIndices(), GL_UNSIGNED_INT, nullptr);
