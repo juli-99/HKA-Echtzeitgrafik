@@ -154,7 +154,7 @@ int main(int argc, char** argv)
     
         //view = glm::translate(view, -viewPos);
         // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
-        /*glm::mat4  view = glm::mat4(1.0f);
+        glm::mat4  view = glm::mat4(1.0f);
         if (topView) {
             viewPos = glm::vec3(0.0f, -distance, 0.0f);
             view = glm::rotate(view, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -174,14 +174,13 @@ int main(int argc, char** argv)
             float tmpDist = distance / 9; // fix scaling
             projection = glm::ortho(-4.0f * tmpDist, 4.0f * tmpDist, -3.0f * tmpDist, 3.0f * tmpDist, 0.1f, 1000.0f);
         }
-        */
+        
 
         // Calculate matrices seins
-        glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
-        glm::mat4 projection;
+        glm::mat4 model = glm::mat4(1.0f);
+   
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
+    ;
 
 
         // Setting uniforms
@@ -202,7 +201,7 @@ int main(int argc, char** argv)
 
         
 
-        /*
+        
         for (const Planet& planet : solarSystem.getPlanets()) {
 
             newShader.use();
@@ -226,7 +225,7 @@ int main(int argc, char** argv)
             
             //Set Light Position
 
-            lightShader.use();
+            /*lightShader.use();
 
             int distance = 50;
             glm::vec3 pos = glm::vec3(0.0f, -2.0f, 3.0f);
@@ -242,6 +241,7 @@ int main(int argc, char** argv)
             pointerLight.setPos(lightShader, pos);
             pointerLight.setPointLightConstant(lightShader, distance);
             pointerLight.setColor(lightShader, color);
+            */
 
 
             //buffer.bind();
@@ -256,12 +256,13 @@ int main(int argc, char** argv)
             glBindVertexArray(0);
             //planet.getGeometry()->unbind();
         }
-        */
+        
 
-        glBindVertexArray(vao);
+        /*glBindVertexArray(vao);
 
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
+        */
 
      
      
