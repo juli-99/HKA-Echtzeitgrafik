@@ -20,7 +20,7 @@
 #include "Planet.hpp"
 #include "SolarSystem.hpp"
 #include "PointLight.hpp"
-
+#include "Fps.hpp"
 
 static const GLuint WIDTH = 1024, HEIGHT = 1024;
 static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 9.0f;
@@ -74,8 +74,7 @@ int main(int argc, char** argv)
     //For the Light
     Shader lightShader;
     lightShader.createShaderPipline(fileFragLight, fileVertLight);
-    
-   
+
     Shader newShader;
     newShader.createShaderPipline(fileFrag, fileVert);
     newShader.use();
@@ -85,9 +84,6 @@ int main(int argc, char** argv)
     const int perspectiveLoc = newShader.getUniformLoc("u_projection");
     const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
 
-    double prevTime = glfwGetTime();
-    int nbFrames = 0;
-
     glm::vec3 viewPos;
 
     int lightDistance = 100;
@@ -96,6 +92,9 @@ int main(int argc, char** argv)
 
     SolarSystem solarSystem = SolarSystem(fileSphere);
 
+    Fps fps([](int fps) {std::cout << fps << std::endl; });
+    fps.start();
+  
     while (glfwWindowShouldClose(window) == 0)
     {
         float currTime = (float)glfwGetTime();
@@ -112,8 +111,7 @@ int main(int argc, char** argv)
             viewPos = glm::vec3(0.0f, -distance, 0.0f);
             view = glm::rotate(view, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             view = glm::translate(view, viewPos);
-        }
-        else {
+        } else {
             viewPos = glm::vec3(0.0f, -distance, -distance);
             view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             view = glm::translate(view, viewPos);
@@ -136,6 +134,7 @@ int main(int argc, char** argv)
         for (const Planet& planet : solarSystem.getPlanets()) {
 
             newShader.use();
+          
             float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
             angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
             if (planet.isRetrograde())
@@ -153,7 +152,6 @@ int main(int argc, char** argv)
 
             // Setting uniforms
             newShader.setUniform(modelLoc, model);
-            
 
             //Set Light Position
 
@@ -184,18 +182,10 @@ int main(int argc, char** argv)
         // process user events
         glfwPollEvents();
 
-        //FPS -> Wieso nur 60 fps?
-        double time = glfwGetTime();
-        nbFrames++;
-        if (time - prevTime >= 1.0) {
-            prevTime = time;
-            
-            std::cout << nbFrames << std::endl;
-            nbFrames = 0;
-        }
+        //FPS
+        fps.countFrame();
     }
 
     glfwDestroyWindow(window);
     glfwTerminate();
 }
-    

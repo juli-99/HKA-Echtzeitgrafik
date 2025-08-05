@@ -5,7 +5,8 @@
 
 #include "SolarSystem.hpp"
 
-// Planetenskalierung relativ zueinander (nur Beispielwerte für Darstellung)
+
+// Planetenskalierung relativ zueinander (nur Beispielwerte fÃ¼r Darstellung)
 static constexpr struct PlanetData {
     const char* name;
     float dayLength;
@@ -32,13 +33,12 @@ SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeomet
 
 SolarSystem::~SolarSystem() {}
 
-
 void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
 {
     Assimp::Importer importer;
 
     // And have it read the given file with some example postprocessing
-    // Usually - if speed is not the most important aspect for you - you’ll
+    // Usually - if speed is not the most important aspect for you - youâ€™ll
     // probably to request more postprocessing than we do in this example.
     const aiScene* scene = importer.ReadFile(spherePath.string(),
         aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |

@@ -14,7 +14,7 @@ Planet::Planet(const std::string& name,
     distanceFromSun(distanceFromSunMillionKm),
     scale(scale),
     retrograde(retrogradeRotation),
-        geometry(geometry)
+    geometry(geometry)
 {
         this->geometry = geometry;
 }
