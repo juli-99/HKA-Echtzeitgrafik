@@ -20,21 +20,12 @@ void PointLight::setPos(Shader shader, glm::vec3 pos)
 	shader.setUniform(posLoc, pos);
 }
 
-void PointLight::setConstant(Shader shader, int distance)
+void PointLight::setDistance(Shader shader, int distance)
 {
-
 	int constLoc = shader.getUniformLoc("u_Light.constant");
 	shader.setUniform(constLoc, attenuation.at(distance).at(0));
-}
-
-void PointLight::setLin(Shader shader, int distance)
-{
 	int linLoc = shader.getUniformLoc("u_Light.lin");
 	shader.setUniform(linLoc, attenuation.at(distance).at(1));
-}
-
-void PointLight::setQuad(Shader shader, int distance)
-{
 	int quadLoc = shader.getUniformLoc("u_Light.quad");
 	shader.setUniform(quadLoc, attenuation.at(distance).at(2));
 }
