@@ -21,55 +21,55 @@ std::map<int, std::vector<float>> attenuation= {
 
 void PointLight::setPos(Shader shader, glm::vec3 pos)
 {
-	int posLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.pos");
+	int posLoc = shader.getUniformLoc("u_Light.pos");
 	shader.setUniform(posLoc, pos);
 }
 
 void PointLight::setConstant(Shader shader, int distance)
 {
 
-	int constLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.constant");
+	int constLoc = shader.getUniformLoc("u_Light.constant");
 	shader.setUniform(constLoc, attenuation.at(distance).at(0));
 }
 
 void PointLight::setLin(Shader shader, int distance)
 {
-	int linLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.lin");
+	int linLoc = shader.getUniformLoc("u_Light.lin");
 	shader.setUniform(linLoc, attenuation.at(distance).at(1));
 }
 
 void PointLight::setQuad(Shader shader, int distance)
 {
-	int quadLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.quad");
+	int quadLoc = shader.getUniformLoc("u_Light.quad");
 	shader.setUniform(quadLoc, attenuation.at(distance).at(2));
 }
 
 void PointLight::setColor(Shader shader, glm::vec3 color)
 {
-	int colorLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.color");
+	int colorLoc = shader.getUniformLoc("u_Light.color");
 	shader.setUniform(colorLoc, color);
 }
 
 void PointLight::setModel(Shader shader, glm::mat4 model)
 {
-	int modelLoc = glGetUniformLocation(shader.getShaderProgram(), "u_model");
+	int modelLoc = shader.getUniformLoc("u_model");
 	shader.setUniform(modelLoc, model);
 }
 
 void PointLight::setView(Shader shader, glm::mat4 view)
 {
-	int viewLoc = glGetUniformLocation(shader.getShaderProgram(), "u_view");
+	int viewLoc = shader.getUniformLoc("u_view");
 	shader.setUniform(viewLoc, view);
 }
 
 void PointLight::setProjection(Shader shader, glm::mat4 projection)
 {
-	int perspectiveLoc = glGetUniformLocation(shader.getShaderProgram(), "u_projection");
+	int perspectiveLoc = shader.getUniformLoc("u_projection");
 	shader.setUniform(perspectiveLoc, projection);
 }
 
 void PointLight::setViewPos(Shader shader, glm::vec3 viewPos)
 {
-	int viewPosLoc = glGetUniformLocation(shader.getShaderProgram(), "u_viewPos");
+	int viewPosLoc = shader.getUniformLoc("u_viewPos");
 	shader.setUniform(viewPosLoc, viewPos);
 }
