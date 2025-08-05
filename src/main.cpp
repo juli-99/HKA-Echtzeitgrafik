@@ -165,7 +165,7 @@ int main(int argc, char** argv)
             pointerLight.setViewPos(lightShader, viewPos);
 
             pointerLight.setPos(lightShader, lightPos);
-            pointerLight.setPointLightConstant(lightShader, lightDistance);
+            pointerLight.setDistance(lightShader, lightDistance);
             pointerLight.setColor(lightShader, lightColor);
             
 
