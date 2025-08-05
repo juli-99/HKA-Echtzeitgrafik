@@ -155,7 +155,7 @@ int main(int argc, char** argv)
     const int perspectiveLoc = newShader.getUniformLoc("u_projection");
     const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
 
-    PointLight pointLight;
+    PointLight pointLight(lightShader);
 
     SolarSystem solarSystem = SolarSystem(fileSphere);
 
@@ -191,13 +191,13 @@ int main(int argc, char** argv)
 
         // set uniforms that are identical for each planet
         lightShader.use();
-        pointLight.setView(lightShader, view);
-        pointLight.setProjection(lightShader, projection);
-        pointLight.setViewPos(lightShader, viewPos);
+        pointLight.setView(view);
+        pointLight.setProjection(projection);
+        pointLight.setViewPos(viewPos);
 
-        pointLight.setPos(lightShader, lightPos);
-        pointLight.setDistance(lightShader, lightDistance);
-        pointLight.setColor(lightShader, lightColour);
+        pointLight.setPos(lightPos);
+        pointLight.setDistance(lightDistance);
+        pointLight.setColor(lightColour);
 
         newShader.setUniform(viewLoc, view);
         newShader.setUniform(perspectiveLoc, projection);
@@ -221,7 +221,7 @@ int main(int argc, char** argv)
 
             // Setting uniforms
             newShader.setUniform(modelLoc, model);
-            pointLight.setModel(lightShader, model);
+            pointLight.setModel(model);
 
 
             buffer.bind();

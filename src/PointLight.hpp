@@ -15,12 +15,16 @@
 class PointLight {
 
 public:
-    void setPos(Shader shader, glm::vec3 pos);
-    void setDistance(Shader shader, int distance);
-    void setColor(Shader shader, glm::vec3 color);
+    PointLight(Shader& shader);
 
-    void setModel(Shader shader, glm::mat4 model);
-    void setView(Shader shader, glm::mat4 view);
-    void setProjection(Shader shader, glm::mat4 projection);
-    void setViewPos(Shader shader, glm::vec3 viewPos);
+    void setPos(glm::vec3 pos);
+    void setDistance(int distance);
+    void setColor(glm::vec3 color);
+
+    void setModel(glm::mat4 model);
+    void setView(glm::mat4 view);
+    void setProjection(glm::mat4 projection);
+    void setViewPos(glm::vec3 viewPos);
+private:
+    Shader shader;
 };
