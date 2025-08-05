@@ -14,7 +14,7 @@ static constexpr struct PlanetData {
     float scale;
     bool retrograde;
 } planetData[] = {
-    { "Sonne",   36000,   0.0f,    0.0f, 3.0f, false},
+    { "Sonne",   36000,   0.0f,    0.0f, 0.7f, false},
     { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false},
     { "Venus",  349947, 35.02f,  108.2f, 0.4f, true},
     { "Erde",     1436, 29.78f,  149.6f, 0.5f, false},
