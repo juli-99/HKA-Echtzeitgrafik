@@ -18,7 +18,7 @@ public:
 
 private:
     std::vector<Planet> planets;
-    //    GeometryBuffer sharedGeometry;
+    GeometryBuffer sharedGeometry;
 
     void loadMesh(const std::filesystem::path& path);
     void initPlanets();

@@ -115,15 +115,10 @@ int main(int argc, char** argv)
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Calculate matrices -> das raus
+        // Calculate matrices
         glm::mat4 model = glm::mat4(1.0f);
      
-        /*
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //x,y,z Rotation um Sonne
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -6.0f)); // Abstand zur Sonne
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation um sich selbst
-        model = glm::scale(model, glm::vec3(2.0f, 1.0f, 1.0f));
-        */
+        
        
         
         
@@ -195,7 +190,7 @@ int main(int argc, char** argv)
             
             //Set Light Position
 
-            lightShader.use();//-> das muss irgendwie für das danach 
+            lightShader.use();
 
             int distance = 50;
             glm::vec3 pos = glm::vec3(0.0f, -2.0f, 3.0f);

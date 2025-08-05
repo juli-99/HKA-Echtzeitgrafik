@@ -11,8 +11,8 @@ public:
         float orbitalSpeed_kms,
         float distanceFromSun_millionKm,
         float scale,
-        bool retrogradeRotation);//,
-    //        GeometryBuffer* geometry);
+        bool retrogradeRotation,
+        GeometryBuffer* geometry);
 
     const std::string& getName() const;
     float getDayLength() const;
@@ -20,7 +20,7 @@ public:
     float getDistanceFromSun() const;
     float getScale() const;
     bool  isRetrograde() const;
-    //    GeometryBuffer* getGeometry() const;
+       GeometryBuffer* getGeometry() const;
 
 private:
     std::string name;
@@ -29,5 +29,5 @@ private:
     float distanceFromSun;        // in Millionen km
     float scale;                  // visueller Skalierungsfaktor
     bool retrograde;
-    //    GeometryBuffer* geometry;
+    GeometryBuffer* geometry;
 };

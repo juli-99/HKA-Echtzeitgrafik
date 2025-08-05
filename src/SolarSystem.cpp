@@ -96,10 +96,10 @@ void SolarSystem::processMesh(const aiScene* scene) {
         }
     }
 
-    //    this->sharedGeometry = GeometryBuffer(vertices, indices);
-        //GeometryBuffer buffer = GeometryBuffer(false);
-        //buffer.uploadVertexData();
-        //buffer.uploadIndexData();
+        //this->sharedGeometry = GeometryBuffer(vertices, indices);
+      //  GeometryBuffer buffer = GeometryBuffer(false);
+        sharedGeometry.uploadVertexData(vertices.data(), vertices.size());
+        sharedGeometry.uploadIndexData(indices.data(), indices.size());
         //sharedGeometry = buffer;
 }
 
@@ -111,8 +111,8 @@ void SolarSystem::initPlanets() {
             data.orbitalSpeed,
             data.distance,
             data.scale,
-            data.retrograde//,
-            //            &sharedGeometry
+            data.retrograde,
+            &sharedGeometry
         );
     }
 }
