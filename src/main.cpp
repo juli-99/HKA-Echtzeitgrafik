@@ -18,6 +18,7 @@
 
 #include "Shader.hpp"
 #include "GeometryBuffer.hpp"
+#include "PointLight.hpp"
 
 
 float cubePhong[] = {
@@ -173,13 +174,20 @@ int main(int argc, char** argv)
         // Calculate matrices
         glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
         glm::mat4 projection;
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //x,y,z Rotation um Sonne
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -6.0f)); // Abstand zur Sonne
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation um sich selbst
+        model = glm::scale(model, glm::vec3(2.0f, 1.0f, 1.0f));
+        
+       
+        
+        
 
     
         //view = glm::translate(view, -viewPos);
         // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -6.0f));
 
         if (isPerspective) {
             projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
@@ -205,48 +213,24 @@ int main(int argc, char** argv)
         //Set Light Position
         
         lightShader.use();//-> das muss irgendwie für das danach 
-        struct PointLight {
-            glm::vec3 pos;
-            glm::vec3 color;
-            float constant;
-            float lin;
-            float quad;
-        };
 
-        PointLight pointLight;
-        pointLight.constant =  1.0;
-        pointLight.lin = 0.09;
-        pointLight.quad = 0.032;
-        pointLight.pos = glm::vec3(0.0f, -2.0f, 3.0f);
-        pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
+        int distance = 50;
+        glm::vec3 pos = glm::vec3(0.0f, -2.0f, 3.0f);
+        glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-        int modelLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_model");
-        lightShader.setUniform(modelLoc2, model);
+        PointLight pointerLight;
 
-        int viewLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_view");
-        lightShader.setUniform(viewLoc2, view);
-
-        int perspectiveLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_projection");
-        lightShader.setUniform(perspectiveLoc2, projection);
-
-        int viewPosLoc2 = glGetUniformLocation(lightShader.getShaderProgram(), "u_viewPos");
-        lightShader.setUniform(viewPosLoc2, viewPos);
-
-        int posLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.pos");
-        lightShader.setUniform(posLoc, pointLight.pos);
+        pointerLight.setModel(lightShader, model);
+        pointerLight.setView(lightShader, view);
+        pointerLight.setProjection(lightShader, projection);
+        pointerLight.setViewPos(lightShader, viewPos);
         
-        int constLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.constant");
-        lightShader.setUniform(constLoc, pointLight.constant);
+        pointerLight.setPos(lightShader, pos);
+        pointerLight.setConstant(lightShader, distance);
+        pointerLight.setLin(lightShader, distance);
+        pointerLight.setQuad(lightShader, distance);
+        pointerLight.setColor(lightShader, color);
 
-        int linLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.lin");
-        lightShader.setUniform(linLoc, pointLight.lin);
-
-        int quadLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.quad");
-        lightShader.setUniform(quadLoc, pointLight.quad);
-
-
-        int colorLoc = glGetUniformLocation(lightShader.getShaderProgram(), "u_Light.color");
-        lightShader.setUniform(colorLoc, pointLight.color);
      
      
 
