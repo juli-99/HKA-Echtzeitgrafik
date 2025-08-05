@@ -25,21 +25,15 @@ void PointLight::setPos(Shader shader, glm::vec3 pos)
 	shader.setUniform(posLoc, pos);
 }
 
-void PointLight::setConstant(Shader shader, int distance)
+void PointLight::setPointLightConstant(Shader shader, int distance)
 {
 
 	int constLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.constant");
 	shader.setUniform(constLoc, attenuation.at(distance).at(0));
-}
 
-void PointLight::setLin(Shader shader, int distance)
-{
 	int linLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.lin");
 	shader.setUniform(linLoc, attenuation.at(distance).at(1));
-}
 
-void PointLight::setQuad(Shader shader, int distance)
-{
 	int quadLoc = glGetUniformLocation(shader.getShaderProgram(), "u_Light.quad");
 	shader.setUniform(quadLoc, attenuation.at(distance).at(2));
 }

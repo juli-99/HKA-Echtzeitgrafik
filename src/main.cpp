@@ -21,19 +21,30 @@
 #include "PointLight.hpp"
 
 
-
 bool isPerspective = true;
+bool topView = false;
+float distance = 9.0f;
+
+
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && isPerspective == false)
-    {
-        isPerspective = true;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        isPerspective = !isPerspective;
     }
-    else if(key == GLFW_KEY_SPACE && action == GLFW_PRESS && isPerspective == true) {
-        isPerspective = false;
+
+    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+        topView = !topView;
     }
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    distance -= (float)yoffset;
+    if (distance < 2.0f)
+        distance = 2.0f;
+    if (distance > 40.0f)
+        distance = 40.0f;
 }
 
 
@@ -147,9 +158,7 @@ int main(int argc, char** argv)
         pointerLight.setViewPos(lightShader, viewPos);
         
         pointerLight.setPos(lightShader, pos);
-        pointerLight.setConstant(lightShader, distance);
-        pointerLight.setLin(lightShader, distance);
-        pointerLight.setQuad(lightShader, distance);
+        pointerLight.setPointLightConstant(lightShader, distance);
         pointerLight.setColor(lightShader, color);
 
      
