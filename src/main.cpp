@@ -20,6 +20,7 @@
 #include "GeometryBuffer.hpp"
 #include "Planet.hpp"
 #include "SolarSystem.hpp"
+#include "PointLight.hpp"
 
 
 float cubePhong[] = {
@@ -73,13 +74,6 @@ float cubePhong[] = {
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
 };
 
-unsigned int indices[] =
-{  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-};
-
-
 
 
 bool isPerspective = true;
@@ -130,14 +124,11 @@ int main(int argc, char** argv)
     lightShader.createShaderPipline(fileFragLight, fileVertLight);
 
     Shader newShader;
-
     newShader.createShaderPipline(fileFrag, fileVert);
     
 
     /*Sending stuff between CPU und GPU with a Buffer Array (because it is really slow)*/
     GeometryBuffer buffer(true);
-
-    //buffer.uploadIndexData(indices, sizeof(indices));
 
     buffer.uploadVertexData(cubePhong, sizeof(cubePhong));
     buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
@@ -155,6 +146,8 @@ int main(int argc, char** argv)
     const float rotationSpeedScale = 0.01f;
 
     const glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+    const glm::vec3 lightColour(1.0f, 1.0f, 1.0f);
+    const int lightDistance = 50;
 
     // get uniform locations
     const int modelLoc = newShader.getUniformLoc("u_model");
@@ -172,28 +165,14 @@ int main(int argc, char** argv)
     const int quadLoc = lightShader.getUniformLoc("u_Light.quad");
     const int colorLoc = lightShader.getUniformLoc("u_Light.color");
 
-    struct PointLight {
-        glm::vec3 pos;
-        glm::vec3 color;
-        float constant;
-        float lin;
-        float quad;
-    };
-
     PointLight pointLight;
-    pointLight.constant =  1.0;
-    pointLight.lin = 0.09;
-    pointLight.quad = 0.032;
-    pointLight.pos = lightPos;
-    pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f);
 
     SolarSystem solarSystem = SolarSystem(fileSphere);
 
     while (glfwWindowShouldClose(window) == 0)
     {
         float currTime = (float)glfwGetTime();
-//        newShader.use();
-        lightShader.use();
+
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -221,14 +200,14 @@ int main(int argc, char** argv)
         }
 
         // set uniforms that are identical for each planet
-        lightShader.setUniform(posLoc, pointLight.pos);
-        lightShader.setUniform(constLoc, pointLight.constant);
-        lightShader.setUniform(linLoc, pointLight.lin);
-        lightShader.setUniform(quadLoc, pointLight.quad);
-        lightShader.setUniform(colorLoc, pointLight.color);
-        lightShader.setUniform(viewLoc2, view);
-        lightShader.setUniform(perspectiveLoc2, projection);
-        lightShader.setUniform(viewPosLoc2, viewPos);
+        lightShader.use();
+        pointLight.setView(lightShader, view);
+        pointLight.setProjection(lightShader, projection);
+        pointLight.setViewPos(lightShader, viewPos);
+
+        pointLight.setPos(lightShader, lightPos);
+        pointLight.setDistance(lightShader, lightDistance);
+        pointLight.setColor(lightShader, lightColour);
 
         newShader.setUniform(viewLoc, view);
         newShader.setUniform(perspectiveLoc, projection);
@@ -252,7 +231,8 @@ int main(int argc, char** argv)
 
             // Setting uniforms
             newShader.setUniform(modelLoc, model);
-            lightShader.setUniform(modelLoc2, model);
+            pointLight.setModel(lightShader, model);
+
 
             buffer.bind();
             glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
