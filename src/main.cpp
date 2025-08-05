@@ -76,23 +76,49 @@ int main(int argc, char** argv)
     glfwSetScrollCallback(window, scrollCallback);
 
     //For the Light
-    Shader lightShader;
-    lightShader.createShaderPipline(fileFragLight, fileVertLight);
+    //Shader lightShader;
+    //lightShader.createShaderPipline(fileFragLight, fileVertLight);
     
    
 
     Shader newShader;
     newShader.createShaderPipline(fileFrag, fileVert);
+
+    /**/
+    GLuint vao, vbo, ebo;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+    loadMeshFromFile("sphere.obj", vertices, indices);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+
+    /* Position attribute */
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+
+    /* Color attribute */
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    /**/
     
 
     /*Sending stuff between CPU und GPU with a Buffer Array (because it is really slow)*/
-    GeometryBuffer buffer(true);
+    //GeometryBuffer buffer(true);
 
     //buffer.uploadIndexData(indices, sizeof(indices));
 
-    buffer.uploadVertexData(cubePhong, sizeof(cubePhong));
-    buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
-    buffer.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    //buffer.uploadVertexData(cubePhong, sizeof(cubePhong));
+    //buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
+    //buffer.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
     newShader.use();
     
@@ -116,17 +142,19 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Calculate matrices
-        glm::mat4 model = glm::mat4(1.0f);
+        //glm::mat4 model = glm::mat4(1.0f);
      
         
        
         
         
+  
+        
 
     
         //view = glm::translate(view, -viewPos);
         // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
-        glm::mat4  view = glm::mat4(1.0f);
+        /*glm::mat4  view = glm::mat4(1.0f);
         if (topView) {
             viewPos = glm::vec3(0.0f, -distance, 0.0f);
             view = glm::rotate(view, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -146,6 +174,14 @@ int main(int argc, char** argv)
             float tmpDist = distance / 9; // fix scaling
             projection = glm::ortho(-4.0f * tmpDist, 4.0f * tmpDist, -3.0f * tmpDist, 3.0f * tmpDist, 0.1f, 1000.0f);
         }
+        */
+
+        // Calculate matrices seins
+        glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
+        glm::mat4 projection;
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
 
 
         // Setting uniforms
@@ -166,7 +202,7 @@ int main(int argc, char** argv)
 
         
 
-
+        /*
         for (const Planet& planet : solarSystem.getPlanets()) {
 
             newShader.use();
@@ -208,10 +244,24 @@ int main(int argc, char** argv)
             pointerLight.setColor(lightShader, color);
 
 
-            buffer.bind();
-            glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
-            buffer.unbind();
+            //buffer.bind();
+            //glDrawArrays(GL_TRIANGLES, 0, 36);// Shape of primitiv;  Start of index Vertecies; Amount of Vertecies
+            //buffer.unbind();
+
+            //planet.getGeometry()->bind();
+
+            glBindVertexArray(vao);       
+            
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+            glBindVertexArray(0);
+            //planet.getGeometry()->unbind();
         }
+        */
+
+        glBindVertexArray(vao);
+
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+        glBindVertexArray(0);
 
      
      

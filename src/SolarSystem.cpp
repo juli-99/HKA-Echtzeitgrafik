@@ -27,7 +27,7 @@ static constexpr struct PlanetData {
 
 SolarSystem::SolarSystem(const std::filesystem::path& spherePath) {
     std::cout << "before loadMesh" << std::endl;
-    loadMesh(spherePath);
+    //loadMesh(spherePath);
     std::cout << "after loadMesh|before initPlanets" << std::endl;
     initPlanets();
     std::cout << "after initPlanets" << std::endl;
@@ -96,10 +96,10 @@ void SolarSystem::processMesh(const aiScene* scene) {
         }
     }
 
-        //this->sharedGeometry = GeometryBuffer(vertices, indices);
-      //  GeometryBuffer buffer = GeometryBuffer(false);
-        sharedGeometry.uploadVertexData(vertices.data(), vertices.size());
-        sharedGeometry.uploadIndexData(indices.data(), indices.size());
+    //    this->sharedGeometry = GeometryBuffer(vertices, indices);
+        //GeometryBuffer buffer = GeometryBuffer(false);
+        //buffer.uploadVertexData();
+        //buffer.uploadIndexData();
         //sharedGeometry = buffer;
 }
 
@@ -112,7 +112,7 @@ void SolarSystem::initPlanets() {
             data.distance,
             data.scale,
             data.retrograde,
-            &sharedGeometry
+                      &sharedGeometry
         );
     }
 }

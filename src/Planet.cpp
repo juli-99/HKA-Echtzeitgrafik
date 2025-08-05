@@ -13,8 +13,8 @@ Planet::Planet(const std::string& name,
     orbitalSpeed(orbitalSpeedKms),
     distanceFromSun(distanceFromSunMillionKm),
     scale(scale),
-    retrograde(retrogradeRotation)//,
-        //geometry(geometry)
+    retrograde(retrogradeRotation),
+        geometry(geometry)
 {
         this->geometry = geometry;
 }
