@@ -116,8 +116,6 @@ std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
 
 int main(int argc, char** argv) 
 {
-    std::cout << "Hello Projekt" << std::endl;
-
     GLFWwindow* window = initAndCreateWindow(true);
 
     glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
@@ -207,8 +205,7 @@ int main(int argc, char** argv)
             viewPos = glm::vec3(0.0f, -distance, 0.0f);
             view = glm::rotate(view, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             view = glm::translate(view, viewPos);
-        }
-        else {
+        } else {
             viewPos = glm::vec3(0.0f, -distance, -distance);
             view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             view = glm::translate(view, viewPos);
@@ -243,6 +240,8 @@ int main(int argc, char** argv)
             if (planet.isRetrograde())
                 angularvelocity_self = -angularvelocity_self;
             float angularvelocity_sun = planet.getOrbitalSpeed() / planet.getDistanceFromSun();
+            if (std::isnan(angularvelocity_sun)) // if planet is sun
+                angularvelocity_sun = 0;
 
             // Calculate matrices
             glm::mat4 model = glm::mat4(1.0f);
