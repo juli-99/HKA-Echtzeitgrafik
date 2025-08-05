@@ -21,6 +21,7 @@
 #include "Planet.hpp"
 #include "SolarSystem.hpp"
 #include "PointLight.hpp"
+#include "Fps.hpp"
 
 
 float cubePhong[] = {
@@ -159,6 +160,8 @@ int main(int argc, char** argv)
 
     SolarSystem solarSystem = SolarSystem(fileSphere);
 
+    Fps fps([](int fps) {std::cout << fps << std::endl; });
+
     while (glfwWindowShouldClose(window) == 0)
     {
         float currTime = (float)glfwGetTime();
@@ -236,14 +239,7 @@ int main(int argc, char** argv)
         glfwPollEvents();
 
         //FPS
-        nbFrames++;
-        double time = glfwGetTime();
-        if (time - prevTime >= 1.0) {
-            prevTime = time;
-            
-            std::cout << nbFrames << std::endl;
-            nbFrames = 0;
-        }
+        fps.
         
         
     }
