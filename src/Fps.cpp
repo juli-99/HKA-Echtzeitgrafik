@@ -1,17 +1,18 @@
 #include "Fps.hpp"
 
-Fps::Fps(std::is_function<void(int)> callback)
+Fps::Fps(std::function<void(int)> callback)
 {
     this->callback = callback;
 }
 
 void Fps::start() {
     this->prevTime = glfwGetTime();
+    this->nbFrames = 0;
 }
 
 void Fps::countFrame() {
-    this->nbFrames++;
     double time = glfwGetTime();
+    this->nbFrames++;
     if (time - prevTime >= 1.0) {
         this->prevTime = time;
 

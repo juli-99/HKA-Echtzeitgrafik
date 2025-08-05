@@ -161,6 +161,7 @@ int main(int argc, char** argv)
     SolarSystem solarSystem = SolarSystem(fileSphere);
 
     Fps fps([](int fps) {std::cout << fps << std::endl; });
+    fps.start();
 
     while (glfwWindowShouldClose(window) == 0)
     {
@@ -239,9 +240,7 @@ int main(int argc, char** argv)
         glfwPollEvents();
 
         //FPS
-        fps.
-        
-        
+        fps.countFrame();
     }
 
 

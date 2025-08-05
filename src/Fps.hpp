@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <functional>
 
 #define GLEW_STATIC
 #include <GL/glew.h> // has to be included first!
@@ -8,11 +8,11 @@
 
 class Fps {
 public:
-	Fps(std::is_function<void(int)> callback);
+	Fps(std::function<void(int)> callback);
 	void start();
 	void countFrame();
 private:
-	std::is_function<void(int)> callback;
+	std::function<void(int)> callback;
 	double prevTime;
 	int nbFrames;
-}
+};
