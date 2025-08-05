@@ -85,17 +85,17 @@ int main(int argc, char** argv)
     newShader.createShaderPipline(fileFrag, fileVert);
 
    
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
+    //std::vector<float> vertices;
+    //std::vector<unsigned int> indices;
 
 
-    loadMeshFromFile("sphere.obj", vertices, indices);
+    //loadMeshFromFile("sphere.obj", vertices, indices);
 
 
     
 
     /*Sending stuff between CPU und GPU with a Buffer Array (because it is really slow)*/
-    GeometryBuffer buffer(true);
+    /*GeometryBuffer buffer(true);
 
     buffer.uploadVertexData(vertices.data(), vertices.size() * sizeof(float));
     buffer.uploadIndexData(indices.data(), indices.size() * sizeof(unsigned int));
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
     
     buffer.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
     buffer.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-
+    */
     newShader.use();
     
 
@@ -132,12 +132,7 @@ int main(int argc, char** argv)
         //glm::mat4 model = glm::mat4(1.0f);
      
         
-       
-        
-        
-  
-        
-
+      
     
         //view = glm::translate(view, -viewPos);
         // Move the camera backwards, so the objects becomes visible -> 95 basic without the line above
@@ -232,14 +227,9 @@ int main(int argc, char** argv)
 
           
 
-            //planet.getGeometry()->bind();
-
-            //glBindVertexArray(vao);       
-            buffer.bind();
-            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
-            buffer.unbind();
-            //glBindVertexArray(0);
-            //planet.getGeometry()->unbind();
+            planet.getGeometry()->bind();
+            glDrawElements(GL_TRIANGLES, planet.getGeometry()->getSizeIndices(), GL_UNSIGNED_INT, nullptr);
+            planet.getGeometry()->unbind();
         }
 
      

@@ -20,7 +20,6 @@ private:
     std::vector<Planet> planets;
     GeometryBuffer sharedGeometry;
 
-    void loadMesh(const std::filesystem::path& path);
+    void loadMeshFromFile(const std::filesystem::path& spherePath);
     void initPlanets();
-    void processMesh(const aiScene* scene);
 };

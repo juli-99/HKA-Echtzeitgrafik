@@ -39,6 +39,9 @@ public:
     int getSizeVertex();
     int getSizeIndices();
 
+    void setSizeIndices(GLsizei indicesSize);
+    void setSizeVertex(GLsizei vertexSize);
+
     
 
 private:

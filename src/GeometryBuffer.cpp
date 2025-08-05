@@ -140,3 +140,11 @@ GLsizei GeometryBuffer::getSizeIndices()
     return indicesSize;
 }
 
+void GeometryBuffer::setSizeIndices(GLsizei size) {
+    this->vertexSize = size;
+}
+
+void GeometryBuffer::setSizeVertex(GLsizei size) {
+    this->indicesSize = size;
+}
+
