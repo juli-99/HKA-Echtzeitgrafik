@@ -1,5 +1,6 @@
-#include "Planet.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "Planet.hpp"
 
 Planet::Planet(const std::string& name,
     float dayLengthMinutes,
@@ -42,7 +43,7 @@ float Planet::getScale() const {
     return scale;
 }
 
-bool Planet::isRetrograde() const {
+bool Planet::getRetrograde() const {
     return retrograde;
 }
 

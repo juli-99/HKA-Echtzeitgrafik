@@ -146,7 +146,7 @@ int main(int argc, char** argv)
 
             float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
             angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
-            if (planet.isRetrograde())
+            if (planet.getRetrograde())
                 angularvelocity_self = -angularvelocity_self;
             float angularvelocity_sun = planet.getOrbitalSpeed() / planet.getDistanceFromSun();
             if (std::isnan(angularvelocity_sun)) // if planet is sun

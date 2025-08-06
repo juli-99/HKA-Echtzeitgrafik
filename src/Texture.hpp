@@ -14,7 +14,7 @@
 #include FT_FREETYPE_H
 
 
-#include <stb_image.h>
+#include "stb_image.h"
 
 struct ImageData
 {

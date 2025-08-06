@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 #include <glm/glm.hpp>
+
 #include "GeometryBuffer.hpp"
 #include "Texture.hpp"
-#include <filesystem>
 
 namespace fs = std::filesystem;
 
@@ -25,11 +26,10 @@ public:
     float getOrbitalSpeed() const;
     float getDistanceFromSun() const;
     float getScale() const;
-    bool  isRetrograde() const;
+    bool  getRetrograde() const;
     GeometryBuffer* getGeometry() const;
     int getTextureUnit() const;
     
-
 private:
     std::string name;
     float dayLength;              // in Minutes

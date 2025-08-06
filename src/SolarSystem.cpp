@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include "SolarSystem.hpp"
+#include "helper/RootDir.h"
 
 
 // Planetenskalierung relativ zueinander (nur Beispielwerte für Darstellung)
@@ -17,15 +18,15 @@ static const struct PlanetData {
     fs::path fileName;
     int unitID;
 } planetData[] = {
-    { "Sonne",   36000,   0.0f,    0.0f, 0.7f, false, fileSun, 0},
-    { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, fileMercury, 1},
-    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true, fileVenus, 2},
-    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, fileEarth, 3},
-    { "Mars",     1477, 24.08f,  227.9f, 0.3f, false, fileMars, 4},
-    { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, fileJupiter, 5},
-    { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, fileSaturn, 6},
-    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true, fileUranus, 7},
-    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fileNeptune, 8}
+    { "Sonne",   36000,   0.0f,    0.0f, 0.7f, false, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
+    { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, fs::path(ROOT_DIR) / "res/textures/2k_mercury.jpg", 1},
+    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true,  fs::path(ROOT_DIR) / "res/textures/2k_venus.jpg", 2},
+    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg", 3},
+    { "Mars",     1477, 24.08f,  227.9f, 0.3f, false, fs::path(ROOT_DIR) / "res/textures/2k_mars.jpg", 4},
+    { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, fs::path(ROOT_DIR) / "res/textures/2k_jupiter.jpg", 5},
+    { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, fs::path(ROOT_DIR) / "res/textures/2k_saturn.jpg", 6},
+    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true,  fs::path(ROOT_DIR) / "res/textures/2k_uranus.jpg", 7},
+    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8}
 };
 
 SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true) {
@@ -34,6 +35,10 @@ SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeomet
 }
 
 SolarSystem::~SolarSystem() {}
+
+const std::vector<Planet>& SolarSystem::getPlanets() const {
+    return planets;
+}
 
 void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
 {
@@ -108,13 +113,13 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
     sharedGeometry.LinkAttrib(1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
     sharedGeometry.LinkAttrib(2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
- 
+
     sharedGeometry.setSizeVertex(vertices.size());
     sharedGeometry.setSizeIndices(indices.size());
 }
 
 void SolarSystem::initPlanets() {
-    planets.reserve(sizeof(planetData)/sizeof(PlanetData));
+    planets.reserve(sizeof(planetData) / sizeof(PlanetData));
     for (const auto& data : planetData) {
         planets.emplace_back(
             data.name,
@@ -129,8 +134,4 @@ void SolarSystem::initPlanets() {
 
         );
     }
-}
-
-const std::vector<Planet>& SolarSystem::getPlanets() const {
-    return planets;
 }
