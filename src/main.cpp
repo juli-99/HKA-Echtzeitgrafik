@@ -157,17 +157,16 @@ int main(int argc, char** argv)
 
             lightShader.use();
 
-            PointLight pointerLight;
+            PointLight pointerLight(lightShader);
 
-            pointerLight.setModel(lightShader, model);
-            pointerLight.setView(lightShader, view);
-            pointerLight.setProjection(lightShader, projection);
-            pointerLight.setViewPos(lightShader, viewPos);
+            pointerLight.setModel(model);
+            pointerLight.setView(view);
+            pointerLight.setProjection(projection);
+            pointerLight.setViewPos(viewPos);
 
-            pointerLight.setPos(lightShader, lightPos);
-            pointerLight.setDistance(lightShader, lightDistance);
-            pointerLight.setColor(lightShader, lightColor);
-            
+            pointerLight.setPos(lightPos);
+            pointerLight.setDistance(lightDistance);
+            pointerLight.setColor(lightColor);
 
 
             planet.getGeometry()->bind();
