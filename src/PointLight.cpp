@@ -13,17 +13,39 @@ std::map<int, std::vector<float>> attenuation= {
 	{325, {1.0, 0.014, 0.0007}},
 };
 
-PointLight::PointLight(Shader& shader): shader(shader)
+PointLight::PointLight()
 {
+	this->pos = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->color = glm::vec3(1.0f, 1.0f, 1.0f);
+}
+
+PointLight::PointLight(glm::vec3 pos, glm::vec3 color)
+{
+	this->pos = pos;
+	this->color = color;
 }
 
 void PointLight::setPos(glm::vec3 pos)
 {
-	int posLoc = shader.getUniformLoc("u_Light.pos");
-	shader.setUniform(posLoc, pos);
+	this->pos = pos;
 }
 
-void PointLight::setDistance(int distance)
+void PointLight::setColor(glm::vec3 color)
+{
+	this->color = color;
+}
+
+glm::vec3 PointLight::getPos()
+{
+	return this->pos;
+}
+
+glm::vec3 PointLight::getColor()
+{
+	return this->color;
+}
+
+void PointLight::shader(Shader shader, int distance)
 {
 	int constLoc = shader.getUniformLoc("u_Light.constant");
 	shader.setUniform(constLoc, attenuation.at(distance).at(0));
@@ -31,34 +53,4 @@ void PointLight::setDistance(int distance)
 	shader.setUniform(linLoc, attenuation.at(distance).at(1));
 	int quadLoc = shader.getUniformLoc("u_Light.quad");
 	shader.setUniform(quadLoc, attenuation.at(distance).at(2));
-}
-
-void PointLight::setColor(glm::vec3 color)
-{
-	int colorLoc = shader.getUniformLoc("u_Light.color");
-	shader.setUniform(colorLoc, color);
-}
-
-void PointLight::setModel(glm::mat4 model)
-{
-	int modelLoc = shader.getUniformLoc("u_model");
-	shader.setUniform(modelLoc, model);
-}
-
-void PointLight::setView(glm::mat4 view)
-{
-	int viewLoc = shader.getUniformLoc("u_view");
-	shader.setUniform(viewLoc, view);
-}
-
-void PointLight::setProjection(glm::mat4 projection)
-{
-	int perspectiveLoc = shader.getUniformLoc("u_projection");
-	shader.setUniform(perspectiveLoc, projection);
-}
-
-void PointLight::setViewPos(glm::vec3 viewPos)
-{
-	int viewPosLoc = shader.getUniformLoc("u_viewPos");
-	shader.setUniform(viewPosLoc, viewPos);
 }

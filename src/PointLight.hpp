@@ -1,30 +1,31 @@
 #pragma once
+
+#include <vector>
+#include <map>
 #define GLEW_STATIC
 #include <GL/glew.h> // has to be included first!
 #include <GLFW/glfw3.h>
 #include <assimp/Importer.hpp>
 #include <glm/glm.hpp>
 #include <ft2build.h>
+
 #include "Shader.hpp"
-
-#include <vector>
-#include <map>
-
 
 
 class PointLight {
 
 public:
-    PointLight(Shader& shader);
+    PointLight();
+    PointLight(glm::vec3 pos, glm::vec3 color);
 
     void setPos(glm::vec3 pos);
-    void setDistance(int distance);
     void setColor(glm::vec3 color);
+    glm::vec3 getPos();
+    glm::vec3 getColor();
 
-    void setModel(glm::mat4 model);
-    void setView(glm::mat4 view);
-    void setProjection(glm::mat4 projection);
-    void setViewPos(glm::vec3 viewPos);
+    void shader(Shader shader, int distance);
+
 private:
-    Shader shader;
+    glm::vec3 pos;
+    glm::vec3 color;
 };

@@ -80,11 +80,11 @@ int main(int argc, char** argv)
     const int imageLoc = shader.getUniformLoc("u_image");
 
 
-    int lightDistance = 100;
-    glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+    int lightDistance = 100; //TODO
 
     SolarSystem solarSystem = SolarSystem(SPHERE_OBJ_PATH);
+
+    PointLight pointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
     Fps fps([](int fps) {std::cout << fps << std::endl; });
     fps.start();
@@ -134,6 +134,10 @@ int main(int argc, char** argv)
         shader.setUniform(viewLoc, view);
         shader.setUniform(perspectiveLoc, projection);
         shader.setUniform(viewPosLoc, viewPos);
+        int posLoc = shader.getUniformLoc("u_Light.pos");
+        shader.setUniform(posLoc, pointLight.getPos());
+        int colorLoc = shader.getUniformLoc("u_Light.color");
+        shader.setUniform(colorLoc, pointLight.getColor());
 
         for (const Planet& planet : solarSystem.getPlanets()) {
 
@@ -152,19 +156,13 @@ int main(int argc, char** argv)
             model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
+            shader.setUniform(modelLoc, model);
 
             // Setting image
-
             shader.setUniform(imageLoc, planet.getTextureUnit());
             shader.setUniform(enablePointLightLoc, planet.getName() != "Sonne");
 
-            PointLight pointerLight(shader);
-
-            shader.setUniform(modelLoc, model);
-
-            pointerLight.setPos(lightPos);
-            pointerLight.setDistance(lightDistance);
-            pointerLight.setColor(lightColor);
+            pointLight.shader(shader, lightDistance);
 
 
             planet.getGeometry()->bind();
