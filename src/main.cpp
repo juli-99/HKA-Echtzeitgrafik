@@ -61,9 +61,6 @@ int main(int argc, char** argv)
 {
     GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, true);
 
-    glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_DEPTH_TEST);
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, keyCallback);
     glfwSetScrollCallback(window, scrollCallback);

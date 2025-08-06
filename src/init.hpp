@@ -50,6 +50,10 @@ GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext =
     }
 
     glEnable(GL_MULTISAMPLE);
+    glEnable(GL_DEPTH_TEST);
+
+    glViewport(0, 0, width, height);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     return window;
 
