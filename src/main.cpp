@@ -25,21 +25,18 @@
 
 static const GLuint WIDTH = 1024, HEIGHT = 1024;
 static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 9.0f;
+static const float DISTANCE_SCALE = 0.01f, ORBIT_SPEED_SCALE = 1.0f, ROTATION_SPEED_SCALE = 0.01f;
 
-static const std::filesystem::path fileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
-static const std::filesystem::path fileVert = fs::path(ROOT_DIR) / "res/shader.vert";
-static const std::filesystem::path fileFragSun = fs::path(ROOT_DIR) / "res/sun.frag";
-static const std::filesystem::path fileVertSun = fs::path(ROOT_DIR) / "res/sun.vert";
-static const std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
-static const std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
-static const std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
+static const std::filesystem::path SHADER_PATH_FRAG = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
+static const std::filesystem::path SHADER_PATH_VERT = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
+static const std::filesystem::path SPHERE_OBJ_PATH  = fs::path(ROOT_DIR) / "res/sphere.obj";
 
 
-bool isPerspective = true;
-int selectView = 0;
-float distance = DEFAULT_DISTANCE;
+static bool isPerspective = true;
+static int selectView = 0;
+static float distance = DEFAULT_DISTANCE;
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f);
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
@@ -52,7 +49,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
-void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     distance -= (float)yoffset;
     if (distance < MIN_DISTANCE)
         distance = MIN_DISTANCE;
@@ -62,10 +59,6 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 
 int main(int argc, char** argv)
 {
-    const float distanceScale = 0.01f;
-    const float orbitSpeedScale = 1.0f;
-    const float rotationSpeedScale = 0.01f;
-
     GLFWwindow* window = initAndCreateWindow(WIDTH, HEIGHT, true);
 
     glViewport(0, 0, WIDTH, HEIGHT); //Size of Window left -> to right/ 0 -> WIDTH
@@ -76,7 +69,7 @@ int main(int argc, char** argv)
     glfwSetScrollCallback(window, scrollCallback);
 
 
-    Shader shader(fileFragLight, fileVertLight);
+    Shader shader(SHADER_PATH_FRAG, SHADER_PATH_VERT);
     shader.use();
 
     const int modelLoc = shader.getUniformLoc("u_model");
@@ -91,7 +84,7 @@ int main(int argc, char** argv)
     glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    SolarSystem solarSystem = SolarSystem(fileSphere);
+    SolarSystem solarSystem = SolarSystem(SPHERE_OBJ_PATH);
 
     Fps fps([](int fps) {std::cout << fps << std::endl; });
     fps.start();
@@ -154,9 +147,9 @@ int main(int argc, char** argv)
 
             // Calculate matrices
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::rotate(model, angularvelocity_sun * orbitSpeedScale * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::translate(model, glm::vec3(planet.getDistanceFromSun() * distanceScale, 0.0f, 0.0f));
-            model = glm::rotate(model, angularvelocity_self * rotationSpeedScale * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, angularvelocity_sun * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(planet.getDistanceFromSun() * DISTANCE_SCALE, 0.0f, 0.0f));
+            model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
 
@@ -167,7 +160,8 @@ int main(int argc, char** argv)
 
             PointLight pointerLight(shader);
 
-            pointerLight.setModel(model);
+            shader.setUniform(modelLoc, model);
+
             pointerLight.setPos(lightPos);
             pointerLight.setDistance(lightDistance);
             pointerLight.setColor(lightColor);
