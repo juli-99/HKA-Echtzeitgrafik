@@ -83,7 +83,7 @@ int main(int argc, char** argv)
 
     PointLight pointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
-    Fps fps([](int fps) {std::cout << fps << std::endl; });
+    Fps fps( [](int fps){std::cout << fps << std::endl;} );
     fps.start();
 
     while (glfwWindowShouldClose(window) == 0)
@@ -103,19 +103,19 @@ int main(int argc, char** argv)
             // 0.7f aprogimation of sqrt(1/2) 
             // offsetting because distance of hypotenuse given
             viewPos = glm::vec3(0.0f, -distance * 0.7f, -distance * 0.7f);
-            viewAngle = glm::radians(45.0f);
+            viewAngle = 45.0f;
             break;
         case 1:
             viewPos = glm::vec3(0.0f, -distance, 0.0f);
-            viewAngle = glm::radians(90.0f);
+            viewAngle = 90.0f;
             break;
         case 2:
             viewPos = glm::vec3(0.0f, 0.0f, -distance);
-            viewAngle = glm::radians(0.0f);
+            viewAngle = 0.0f;
             break;
         }
         glm::mat4  view = glm::mat4(1.0f);
-        view = glm::rotate(view, viewAngle, glm::vec3(1.0f, 0.0f, 0.0f));
+        view = glm::rotate(view, glm::radians(viewAngle), glm::vec3(1.0f, 0.0f, 0.0f));
         view = glm::translate(view, viewPos);
 
         // Set perspective
