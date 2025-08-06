@@ -18,7 +18,7 @@ static const struct PlanetData {
     fs::path fileName;
     int unitID;
 } planetData[] = {
-    { "Sonne",   36000,   0.0f,    0.0f, 0.7f, false, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
+    { "Sonne",   36000,   0.0f,    0.0f, 0.9f, false, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
     { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, fs::path(ROOT_DIR) / "res/textures/2k_mercury.jpg", 1},
     { "Venus",  349947, 35.02f,  108.2f, 0.4f, true,  fs::path(ROOT_DIR) / "res/textures/2k_venus.jpg", 2},
     { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg", 3},

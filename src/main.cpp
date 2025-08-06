@@ -24,7 +24,7 @@
 #include "Texture.hpp"
 
 static const GLuint WIDTH = 1024, HEIGHT = 1024;
-static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 9.0f;
+static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 6.0f;
 static const float DISTANCE_SCALE = 0.01f, ORBIT_SPEED_SCALE = 1.0f, ROTATION_SPEED_SCALE = 0.01f;
 
 static const std::filesystem::path SHADER_PATH_FRAG = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
