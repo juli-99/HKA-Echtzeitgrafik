@@ -75,7 +75,6 @@ GeometryBuffer::~GeometryBuffer() {
 void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum usage) {
 
     vertexSize = size;
-    std::cout << size << std::endl;
 
     /*We create a Buffer, everytime we fire a function that modify data of the object -> it will change the binded object */
     glBindVertexArray(vao_);
