@@ -36,7 +36,7 @@ static const std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere
 
 
 bool isPerspective = true;
-bool topView = false;
+int selectView = 0;
 float distance = DEFAULT_DISTANCE;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -46,7 +46,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         isPerspective = !isPerspective;
     }
     if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
-        topView = !topView;
+        selectView += 1;
+        if (selectView > 2)
+            selectView = 0;
     }
 }
 
@@ -90,7 +92,6 @@ int main(int argc, char** argv)
     const int perspectiveLoc = newShader.getUniformLoc("u_projection");
     const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
 
-    glm::vec3 viewPos;
 
     int lightDistance = 100;
     glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -113,15 +114,27 @@ int main(int argc, char** argv)
 
         // Move the camera
         glm::mat4  view = glm::mat4(1.0f);
-        if (topView) {
-            viewPos = glm::vec3(0.0f, -distance, 0.0f);
-            view = glm::rotate(view, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            view = glm::translate(view, viewPos);
-        } else {
-            viewPos = glm::vec3(0.0f, -distance, -distance);
-            view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            view = glm::translate(view, viewPos);
+        float viewAngle;
+        glm::vec3 viewPos;
+        switch(selectView){
+            default:
+            case 0:
+                // 0.7f aprogimation of sqrt(1/2) 
+                // offsetting because distance of hypotenuse given
+                viewPos = glm::vec3(0.0f, -distance * 0.7f, -distance * 0.7f);
+                viewAngle = glm::radians(45.0f);
+                break;
+            case 1:
+                viewPos = glm::vec3(0.0f, -distance, 0.0f);
+                viewAngle = glm::radians(90.0f);
+                break;
+            case 2:
+                viewPos = glm::vec3(0.0f, 0.0f, -distance);
+                viewAngle = glm::radians(0.0f);
+                break;
         }
+        view = glm::rotate(view, viewAngle, glm::vec3(1.0f, 0.0f, 0.0f));
+        view = glm::translate(view, viewPos);
 
         // Set perspective
         glm::mat4 projection;
