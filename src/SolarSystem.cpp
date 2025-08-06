@@ -5,6 +5,7 @@
 
 #include "SolarSystem.hpp"
 
+
 // Planetenskalierung relativ zueinander (nur Beispielwerte für Darstellung)
 static constexpr struct PlanetData {
     const char* name;
@@ -25,80 +26,77 @@ static constexpr struct PlanetData {
     { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false}
 };
 
-SolarSystem::SolarSystem(const std::filesystem::path& spherePath) {
-    std::cout << "before loadMesh" << std::endl;
-    loadMesh(spherePath);
-    std::cout << "after loadMesh|before initPlanets" << std::endl;
+SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true) {
+    loadMeshFromFile(spherePath);
     initPlanets();
-    std::cout << "after initPlanets" << std::endl;
 }
 
 SolarSystem::~SolarSystem() {}
 
-void SolarSystem::loadMesh(const std::filesystem::path& path) {
+void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
+{
     Assimp::Importer importer;
 
-    //TODO temp hack for testing
-    const aiScene* scene = importer.ReadFile(path.string(),
-          aiProcess_CalcTangentSpace
-        | aiProcess_Triangulate
-        | aiProcess_JoinIdenticalVertices
-        | aiProcess_SortByPType
-        | aiProcess_PreTransformVertices
-    );
+    // And have it read the given file with some example postprocessing
+    // Usually - if speed is not the most important aspect for you - you’ll
+    // probably to request more postprocessing than we do in this example.
+    const aiScene* scene = importer.ReadFile(spherePath.string(),
+        aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+        aiProcess_SortByPType | aiProcess_PreTransformVertices);
 
+    // If the import failed, report it
     if (!scene) {
         std::cerr << "Importing of 3D scene failed: " << importer.GetErrorString() << std::endl;
+        return;
     }
+    if (!scene->HasMeshes()) return;
 
-    processMesh(scene);
-}
-
-void SolarSystem::processMesh(const aiScene* scene) {
-    const aiMesh* mesh = scene->mMeshes[0];
+    aiMesh* mesh = scene->mMeshes[0]; // Just load the first mesh in this example
 
     std::vector<float> vertices;
-    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-        // Position
-        vertices.push_back(mesh->mVertices[i].x);
-        vertices.push_back(mesh->mVertices[i].y);
-        vertices.push_back(mesh->mVertices[i].z);
+    std::vector<unsigned int> indices;
 
-        // Normals (falls vorhanden)
-        if (mesh->HasNormals()) {
-            vertices.push_back(mesh->mNormals[i].x);
-            vertices.push_back(mesh->mNormals[i].y);
-            vertices.push_back(mesh->mNormals[i].z);
-        } else {
-            vertices.push_back(0.0f);
-            vertices.push_back(0.0f);
-            vertices.push_back(0.0f);
+    for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+        // Copy the vertex data into the vector "vertices"
+        aiVector3D& v = mesh->mVertices[j];
+        vertices.push_back(v.x);
+        vertices.push_back(v.y);
+        vertices.push_back(v.z);
+
+        if (mesh->HasVertexColors(0))
+        {
+            // Use vertex colors if they are available
+            aiColor4D& c = mesh->mColors[0][j];
+            vertices.push_back(c.r);
+            vertices.push_back(c.g);
+            vertices.push_back(c.b);
         }
-
-        // Texture coords
-        if (mesh->HasTextureCoords(0)) {
-            vertices.push_back(mesh->mTextureCoords[0][i].x);
-            vertices.push_back(mesh->mTextureCoords[0][i].y);
-        } else {
-            vertices.push_back(0.0f);
-            vertices.push_back(0.0f);
+        else
+        {
+            // In this case we use the position as the color attribute
+            vertices.push_back(v.x);
+            vertices.push_back(v.y);
+            vertices.push_back(v.z);
         }
     }
 
-    std::vector<unsigned int> indices;
     for (unsigned int k = 0; k < mesh->mNumFaces; k++) {
         aiFace& face = mesh->mFaces[k];
-        // We can assume that there are only 3 indices per face as we set aiProcess_Triangulate for the import
-        for (unsigned int j = 0; j < 3; ++j) {
+        // Copy the index values to the vector "indices" above
+        // We can assume that there are only 3 indices per face
+        // because we set the aiProcess_Triangulate flag during the import.
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
             indices.push_back(face.mIndices[j]);
         }
     }
 
-//    this->sharedGeometry = GeometryBuffer(vertices, indices);
-    //GeometryBuffer buffer = GeometryBuffer(false);
-    //buffer.uploadVertexData();
-    //buffer.uploadIndexData();
-    //sharedGeometry = buffer;
+    sharedGeometry.uploadVertexData(vertices.data(), vertices.size() * sizeof(float));
+    sharedGeometry.uploadIndexData(indices.data(), indices.size() * sizeof(unsigned int));
+    sharedGeometry.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
+    sharedGeometry.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    
+    sharedGeometry.setSizeVertex(vertices.size());
+    sharedGeometry.setSizeIndices(indices.size());
 }
 
 void SolarSystem::initPlanets() {
@@ -109,8 +107,8 @@ void SolarSystem::initPlanets() {
             data.orbitalSpeed,
             data.distance,
             data.scale,
-            data.retrograde//,
-//            &sharedGeometry
+            data.retrograde,
+            &sharedGeometry
         );
     }
 }

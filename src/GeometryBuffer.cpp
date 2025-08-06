@@ -1,6 +1,8 @@
 #include "GeometryBuffer.hpp"
 
 
+
+
 //vbo -> creates Buffer with data
 //vao -> pointer on one or more Buffers
 
@@ -72,6 +74,9 @@ GeometryBuffer::~GeometryBuffer() {
 
 void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum usage) {
 
+    vertexSize = size;
+    std::cout << size << std::endl;
+
     /*We create a Buffer, everytime we fire a function that modify data of the object -> it will change the binded object */
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
@@ -82,6 +87,9 @@ void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum 
 void GeometryBuffer::uploadIndexData(const void* data, GLsizeiptr size, GLenum usage) {
     if (!hasEBO_)
         return;
+
+    indicesSize = size;
+    
 
     glBindVertexArray(vao_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
@@ -120,5 +128,23 @@ void GeometryBuffer::LinkAttrib(GLuint layout, GLuint numComponents, GLenum type
     */
     
 
+}
+
+GLsizei GeometryBuffer::getSizeVertex()
+{
+    return vertexSize;
+}
+
+GLsizei GeometryBuffer::getSizeIndices()
+{
+    return indicesSize;
+}
+
+void GeometryBuffer::setSizeIndices(GLsizei size) {
+    this->vertexSize = size;
+}
+
+void GeometryBuffer::setSizeVertex(GLsizei size) {
+    this->indicesSize = size;
 }
 
