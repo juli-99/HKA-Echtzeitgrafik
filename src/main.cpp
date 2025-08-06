@@ -82,6 +82,13 @@ int main(int argc, char** argv)
     //For the sun
     Shader sunShader;
     sunShader.createShaderPipline(fileFragSun, fileVertSun);
+    sunShader.use();
+
+    const int sunModelLoc = sunShader.getUniformLoc("u_model");
+    const int sunViewLoc = sunShader.getUniformLoc("u_view");
+    const int sunPerspectiveLoc = sunShader.getUniformLoc("u_projection");
+    const int sunViewPosLoc = sunShader.getUniformLoc("u_viewPos");
+    const int sunEmissiveC = sunShader.getUniformLoc("u_EmissiveColor");
 
     Shader newShader;
     newShader.createShaderPipline(fileFrag, fileVert);
@@ -189,16 +196,11 @@ int main(int argc, char** argv)
 
             if (planet.getName() == "Sonne") {
                 sunShader.use();
-                int modelLoc =sunShader.getUniformLoc("u_model");
-                sunShader.setUniform(modelLoc, model);
-                int viewLoc = sunShader.getUniformLoc("u_view");
-                sunShader.setUniform(viewLoc, view);
-                int perspectiveLoc = sunShader.getUniformLoc("u_projection");
-                sunShader.setUniform(perspectiveLoc, projection);
-                int viewPosLoc = sunShader.getUniformLoc("u_viewPos");
+                sunShader.setUniform(sunModelLoc, model);
+                sunShader.setUniform(sunViewLoc, view);
+                sunShader.setUniform(sunPerspectiveLoc, projection);
                 sunShader.setUniform(viewPosLoc, viewPos);
-                int emissiveC = sunShader.getUniformLoc("u_EmissiveColor");
-                sunShader.setUniform(emissiveC, glm::vec3(1.0f, 1.0f, 0.8f));
+                sunShader.setUniform(sunEmissiveC, glm::vec3(1.0f, 1.0f, 0.8f));
             }
 
 
