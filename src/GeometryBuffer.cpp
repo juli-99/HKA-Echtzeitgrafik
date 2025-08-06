@@ -108,8 +108,8 @@ void GeometryBuffer::unbind() const {
 void GeometryBuffer::LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset)
 {
     glBindVertexArray(vao_);
-    glEnableVertexAttribArray(layout);// Position of Vertex attribute
     glVertexAttribPointer(layout, numComponents, type, GL_FALSE, string, offset); //Position of Vertex Attribute; Values per Vertex; Which Values Type; Coordinates as int; Data between each Vertex; Offset
+    glEnableVertexAttribArray(layout);// Position of Vertex attribute
     glBindVertexArray(0);
 
     /*

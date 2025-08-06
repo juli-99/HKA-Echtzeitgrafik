@@ -78,6 +78,16 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
             vertices.push_back(v.y);
             vertices.push_back(v.z);
         }
+        // UV coordinates (if available)
+        if (mesh->HasTextureCoords(0)) {
+            aiVector3D& uv = mesh->mTextureCoords[0][j];
+            vertices.push_back(uv.x); // U
+            vertices.push_back(uv.y); // V
+        }
+        else {
+            vertices.push_back(0.0f); // default U
+            vertices.push_back(0.0f); // default V
+        }
     }
 
     for (unsigned int k = 0; k < mesh->mNumFaces; k++) {
@@ -92,9 +102,11 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
 
     sharedGeometry.uploadVertexData(vertices.data(), vertices.size() * sizeof(float));
     sharedGeometry.uploadIndexData(indices.data(), indices.size() * sizeof(unsigned int));
-    sharedGeometry.LinkAttrib(0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)0);
-    sharedGeometry.LinkAttrib(1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    
+    sharedGeometry.LinkAttrib(0, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)0);
+    sharedGeometry.LinkAttrib(1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
+    sharedGeometry.LinkAttrib(2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+ 
     sharedGeometry.setSizeVertex(vertices.size());
     sharedGeometry.setSizeIndices(indices.size());
 }
