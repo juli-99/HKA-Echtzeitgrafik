@@ -15,7 +15,8 @@ in vec3 normal;
 in vec3 fragPos;
 
 uniform vec3 u_viewPos; // Camera Position
-
+in vec2 texCoord;
+uniform sampler2D u_image;
 
 uniform PointLight u_Light;
 
@@ -25,7 +26,7 @@ void main() {
 float ambientStr = 0.1;
 float specularStr = 0.5;
 vec3 lightColor = vec3(1.0); 
-vec3 objColor = vec3(0.78, 0.66, 0.46);
+
  
 vec3 norm = normalize(normal);
 vec3 lightDir = normalize(u_Light.pos - fragPos);
@@ -48,7 +49,8 @@ spec = specularStr * pow(max(dot(viewDir, reflectDir), 0.0001), 32) * lightColor
 }
 
 
-vec3 phong = (ambient + diffuse + spec) * objColor;
 
-out_color = vec4(phong, 1.0);
+vec3 phong = (ambient + diffuse + spec);
+vec3 result = texture(u_image, texCoord).rgb * phong;
+out_color = vec4(result, 1);
 }

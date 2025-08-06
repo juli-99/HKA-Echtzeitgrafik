@@ -1,7 +1,7 @@
 #version 330 core
-out vec4 FragColor;
-uniform vec3 u_EmissiveColor;
-void main()
-{
-FragColor = vec4(u_EmissiveColor, 1.0);
-}
+in vec2 texCoord;
+uniform sampler2D u_image;
+layout (location = 0) out vec4 out_color;
+void main() {
+out_color = texture(u_image, texCoord);
+};

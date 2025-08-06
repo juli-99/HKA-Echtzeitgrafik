@@ -33,7 +33,7 @@ static const std::filesystem::path fileFragSun = fs::path(ROOT_DIR) / "res/sun.f
 static const std::filesystem::path fileVertSun = fs::path(ROOT_DIR) / "res/sun.vert";
 static const std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
 static const std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
-static const std::filesystem::path fileImage = fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg";
+static const std::filesystem::path fileImage = fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg";
 static const std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
 
 
@@ -77,7 +77,7 @@ GLuint createTexture(ImageData imageData, int unit)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -171,7 +171,7 @@ int main(int argc, char** argv)
     {
         float currTime = (float)glfwGetTime();
 
-        newShader.use();
+        //newShader.use();
 
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
@@ -211,13 +211,13 @@ int main(int argc, char** argv)
         }
 
         // Setting uniforms that don't change per Planet
-        newShader.setUniform(viewLoc, view);
+        /*newShader.setUniform(viewLoc, view);
         newShader.setUniform(perspectiveLoc, projection);
-        newShader.setUniform(viewPosLoc, viewPos);
+        newShader.setUniform(viewPosLoc, viewPos);*/
         
         for (const Planet& planet : solarSystem.getPlanets()) {
 
-            newShader.use();
+           // newShader.use();
           
             float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
             angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
@@ -235,18 +235,18 @@ int main(int argc, char** argv)
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
             
-
-            // Setting uniforms
-            newShader.setUniform(modelLoc, model);
+            //newShader.setUniform(modelLoc, model);
             
-            const int imageLoc = newShader.getUniformLoc("u_image");
-            newShader.setUniform(imageLoc, 0);
           
             
 
             //Set Light Position
 
             lightShader.use();
+
+            // Setting uniforms
+            const int imageLoc = lightShader.getUniformLoc("u_image");
+            lightShader.setUniform(imageLoc, 0);
 
             PointLight pointerLight(lightShader);
 
@@ -265,7 +265,22 @@ int main(int argc, char** argv)
                 sunShader.setUniform(sunViewLoc, view);
                 sunShader.setUniform(sunPerspectiveLoc, projection);
                 sunShader.setUniform(viewPosLoc, viewPos);
-                sunShader.setUniform(sunEmissiveC, glm::vec3(1.0f, 1.0f, 0.8f));
+                
+                /*int posLoc = sunShader.getUniformLoc("u_Light.pos");
+                sunShader.setUniform(posLoc, viewPos);
+
+                int constLoc = sunShader.getUniformLoc("u_Light.constant");
+            
+                sunShader.setUniform(constLoc, 1.0f);
+                int linLoc = sunShader.getUniformLoc("u_Light.lin");
+                sunShader.setUniform(linLoc, 0.09f);
+                int quadLoc = sunShader.getUniformLoc("u_Light.quad");
+                sunShader.setUniform(quadLoc, 0.032f);
+                */
+                const int imageLoc1 = sunShader.getUniformLoc("u_image");
+                sunShader.setUniform(imageLoc1, 0);
+
+              
             }
 
             
