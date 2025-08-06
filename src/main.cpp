@@ -50,7 +50,7 @@ struct ImageData
 ImageData loadImage(std::filesystem::path imagePath)
 {
     // Create Textures
- 
+
     std::string texturePath = imagePath.string();
 
     int width, height, nrChannels;
@@ -66,7 +66,7 @@ ImageData loadImage(std::filesystem::path imagePath)
 
 GLuint createTexture(ImageData imageData, int unit)
 {
-   
+
     unsigned int texture;
     glGenTextures(1, &texture);
     glActiveTexture(GL_TEXTURE0 + unit);
@@ -105,7 +105,7 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
         distance = MAX_DISTANCE;
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
     const float distanceScale = 0.01f;
     const float orbitSpeedScale = 1.0f;
@@ -129,30 +129,15 @@ int main(int argc, char** argv)
         stbi_image_free(imageData.data);
     }
 
-    //For the Light
-    Shader lightShader(fileFragLight, fileVertLight);
+    Shader shader(fileFragLight, fileVertLight);
+    shader.use();
 
-
-    //For the sun
-    Shader sunShader(fileFragSun, fileVertSun);
-    sunShader.use();
-
-    const int sunModelLoc = sunShader.getUniformLoc("u_model");
-    const int sunViewLoc = sunShader.getUniformLoc("u_view");
-    const int sunPerspectiveLoc = sunShader.getUniformLoc("u_projection");
-    const int sunViewPosLoc = sunShader.getUniformLoc("u_viewPos");
-    const int sunEmissiveC = sunShader.getUniformLoc("u_EmissiveColor");
-
-    Shader newShader(fileFrag, fileVert);
-    newShader.use();
-
-    const int modelLoc = newShader.getUniformLoc("u_model");
-    const int viewLoc = newShader.getUniformLoc("u_view");
-    const int perspectiveLoc = newShader.getUniformLoc("u_projection");
-    const int viewPosLoc = newShader.getUniformLoc("u_viewPos");
-
-
-    
+    const int modelLoc = shader.getUniformLoc("u_model");
+    const int viewLoc = shader.getUniformLoc("u_view");
+    const int perspectiveLoc = shader.getUniformLoc("u_projection");
+    const int viewPosLoc = shader.getUniformLoc("u_viewPos");
+    const int enablePointLightLoc = shader.getUniformLoc("u_enablePointLight");
+    const int imageLoc = shader.getUniformLoc("u_image");
 
 
     int lightDistance = 100;
@@ -163,12 +148,10 @@ int main(int argc, char** argv)
 
     Fps fps([](int fps) {std::cout << fps << std::endl; });
     fps.start();
-  
+
     while (glfwWindowShouldClose(window) == 0)
     {
         float currTime = (float)glfwGetTime();
-
-        //newShader.use();
 
         // clear the window and set Background color
         glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
@@ -178,22 +161,22 @@ int main(int argc, char** argv)
         glm::mat4  view = glm::mat4(1.0f);
         float viewAngle;
         glm::vec3 viewPos;
-        switch(selectView){
-            default:
-            case 0:
-                // 0.7f aprogimation of sqrt(1/2) 
-                // offsetting because distance of hypotenuse given
-                viewPos = glm::vec3(0.0f, -distance * 0.7f, -distance * 0.7f);
-                viewAngle = glm::radians(45.0f);
-                break;
-            case 1:
-                viewPos = glm::vec3(0.0f, -distance, 0.0f);
-                viewAngle = glm::radians(90.0f);
-                break;
-            case 2:
-                viewPos = glm::vec3(0.0f, 0.0f, -distance);
-                viewAngle = glm::radians(0.0f);
-                break;
+        switch (selectView) {
+        default:
+        case 0:
+            // 0.7f aprogimation of sqrt(1/2) 
+            // offsetting because distance of hypotenuse given
+            viewPos = glm::vec3(0.0f, -distance * 0.7f, -distance * 0.7f);
+            viewAngle = glm::radians(45.0f);
+            break;
+        case 1:
+            viewPos = glm::vec3(0.0f, -distance, 0.0f);
+            viewAngle = glm::radians(90.0f);
+            break;
+        case 2:
+            viewPos = glm::vec3(0.0f, 0.0f, -distance);
+            viewAngle = glm::radians(0.0f);
+            break;
         }
         view = glm::rotate(view, viewAngle, glm::vec3(1.0f, 0.0f, 0.0f));
         view = glm::translate(view, viewPos);
@@ -211,11 +194,9 @@ int main(int argc, char** argv)
         /*newShader.setUniform(viewLoc, view);
         newShader.setUniform(perspectiveLoc, projection);
         newShader.setUniform(viewPosLoc, viewPos);*/
-        
+
         for (const Planet& planet : solarSystem.getPlanets()) {
 
-           // newShader.use();
-          
             float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
             angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
             if (planet.isRetrograde())
@@ -231,21 +212,14 @@ int main(int argc, char** argv)
             model = glm::rotate(model, angularvelocity_self * rotationSpeedScale * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
-            
-            //newShader.setUniform(modelLoc, model);
-            
-          
-            
 
             //Set Light Position
 
-            lightShader.use();
-
             // Setting uniforms
-            const int imageLoc = lightShader.getUniformLoc("u_image");
-            lightShader.setUniform(imageLoc, 0);
+            shader.setUniform(imageLoc, 0);
+            shader.setUniform(enablePointLightLoc, planet.getName() != "Sonne");
 
-            PointLight pointerLight(lightShader);
+            PointLight pointerLight(shader);
 
             pointerLight.setModel(model);
             pointerLight.setView(view);
@@ -256,31 +230,6 @@ int main(int argc, char** argv)
             pointerLight.setDistance(lightDistance);
             pointerLight.setColor(lightColor);
 
-            if (planet.getName() == "Sonne") {
-                sunShader.use();
-                sunShader.setUniform(sunModelLoc, model);
-                sunShader.setUniform(sunViewLoc, view);
-                sunShader.setUniform(sunPerspectiveLoc, projection);
-                sunShader.setUniform(viewPosLoc, viewPos);
-                
-                /*int posLoc = sunShader.getUniformLoc("u_Light.pos");
-                sunShader.setUniform(posLoc, viewPos);
-
-                int constLoc = sunShader.getUniformLoc("u_Light.constant");
-            
-                sunShader.setUniform(constLoc, 1.0f);
-                int linLoc = sunShader.getUniformLoc("u_Light.lin");
-                sunShader.setUniform(linLoc, 0.09f);
-                int quadLoc = sunShader.getUniformLoc("u_Light.quad");
-                sunShader.setUniform(quadLoc, 0.032f);
-                */
-                const int imageLoc1 = sunShader.getUniformLoc("u_image");
-                sunShader.setUniform(imageLoc1, 0);
-
-              
-            }
-
-            
 
             planet.getGeometry()->bind();
             glDrawElements(GL_TRIANGLES, planet.getGeometry()->getSizeIndices(), GL_UNSIGNED_INT, nullptr);

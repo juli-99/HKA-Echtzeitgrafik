@@ -13,11 +13,11 @@ layout (location = 0) out vec4 out_color;
 
 in vec3 normal;
 in vec3 fragPos;
+in vec2 texCoord;
 
 uniform vec3 u_viewPos; // Camera Position
-in vec2 texCoord;
 uniform sampler2D u_image;
-
+uniform bool u_enablePointLight;
 uniform PointLight u_Light;
 
 
@@ -51,6 +51,10 @@ spec = specularStr * pow(max(dot(viewDir, reflectDir), 0.0001), 32) * lightColor
 
 
 vec3 phong = (ambient + diffuse + spec);
-vec3 result = texture(u_image, texCoord).rgb * phong;
-out_color = vec4(result, 1);
+vec3 result = texture(u_image, texCoord).rgb;
+if (u_enablePointLight) {
+	 result *= phong;
+}
+
+out_color = vec4(result, 1.0);
 }
