@@ -17,7 +17,7 @@ Planet::Planet(const std::string& name,
     scale(scale),
     retrograde(retrogradeRotation),
     geometry(geometry),
-    texture(filePath, unitID)
+    texture(filePath, unitID, GL_LINEAR_MIPMAP_LINEAR, GL_CLAMP_TO_EDGE)
 {
         this->geometry = geometry;
 }

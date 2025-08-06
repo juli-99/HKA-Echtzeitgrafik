@@ -1,4 +1,5 @@
 #include "Texture.hpp"
+#include "Texture.hpp"
 
 
 ImageData Texture::loadImage(std::filesystem::path imagePath)
@@ -18,7 +19,7 @@ ImageData Texture::loadImage(std::filesystem::path imagePath)
     return { imageData, width, height, nrChannels };
 }
 
-GLuint Texture::createTexture(ImageData imageData, int unit)
+GLuint Texture::createTexture(ImageData imageData, int unit, GLint mipmapFilter, GLint textureWraper)
 {
 
     unsigned int texture;
@@ -28,25 +29,32 @@ GLuint Texture::createTexture(ImageData imageData, int unit)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageData.width, imageData.height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData.data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWraper);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWraper);
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmapFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     return texture;
 }
 
-Texture::Texture(std::filesystem::path fileImage, int unit) {
+Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter, GLint textureWraper) {
     this->unitID = unit;
     ImageData imageData = loadImage(fileImage);
-    GLuint stoneTexture;
     if (imageData.data)
     {
-        stoneTexture = createTexture(imageData, unit);
+
+        this->texture = createTexture(imageData, unit, textureFilter, textureWraper);
         stbi_image_free(imageData.data);
     }
+}
+
+Texture::~Texture()
+{
+    std::cout << texture << std::endl;
+    glDeleteTextures(1, &texture);
+
 }
 
 int Texture::getUnitID() const

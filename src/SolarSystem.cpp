@@ -114,6 +114,7 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
 }
 
 void SolarSystem::initPlanets() {
+    planets.reserve(sizeof(planetData)/sizeof(PlanetData));
     for (const auto& data : planetData) {
         planets.emplace_back(
             data.name,
