@@ -89,6 +89,11 @@ GLint Shader::getUniformLoc(const char* name)
     return glGetUniformLocation(this->shaderProgram, name);
 }
 
+void Shader::setUniform(GLint location, bool value)
+{
+    glUniform1i(location, value);
+}
+
 void Shader::setUniform(GLint location, int value)
 {
     glUniform1i(location, value);
