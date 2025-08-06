@@ -130,13 +130,11 @@ int main(int argc, char** argv)
     }
 
     //For the Light
-    Shader lightShader;
-    lightShader.createShaderPipline(fileFragLight, fileVertLight);
+    Shader lightShader(fileFragLight, fileVertLight);
 
 
     //For the sun
-    Shader sunShader;
-    sunShader.createShaderPipline(fileFragSun, fileVertSun);
+    Shader sunShader(fileFragSun, fileVertSun);
     sunShader.use();
 
     const int sunModelLoc = sunShader.getUniformLoc("u_model");
@@ -145,8 +143,7 @@ int main(int argc, char** argv)
     const int sunViewPosLoc = sunShader.getUniformLoc("u_viewPos");
     const int sunEmissiveC = sunShader.getUniformLoc("u_EmissiveColor");
 
-    Shader newShader;
-    newShader.createShaderPipline(fileFrag, fileVert);
+    Shader newShader(fileFrag, fileVert);
     newShader.use();
 
     const int modelLoc = newShader.getUniformLoc("u_model");

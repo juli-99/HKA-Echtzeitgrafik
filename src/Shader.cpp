@@ -1,25 +1,8 @@
 #include "Shader.hpp"
 
 
-
-std::string Shader::loadShaderSource(std::string filepath)
+Shader::Shader(const std::filesystem::path fileFrag, const std::filesystem::path fileVert)
 {
-    std::ifstream file(filepath);
-    if (!file.is_open()) {
-        std::cerr << "Failed to oben the Fail: " << filepath << std::endl;
-        return "";
-    }
-
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
-
-
-void Shader::createShaderPipline(std::filesystem::path fileFrag, std::filesystem::path fileVert)
-{
-        
-
         std::string reVertexSource = loadShaderSource(fileVert.string());
         std::string reFragmentSource = loadShaderSource(fileFrag.string());
 
@@ -83,6 +66,18 @@ void Shader::createShaderPipline(std::filesystem::path fileFrag, std::filesystem
         this->shaderProgram = shaderProgram;
 }
 
+std::string Shader::loadShaderSource(std::string filepath)
+{
+    std::ifstream file(filepath);
+    if (!file.is_open()) {
+        std::cerr << "Failed to oben the Fail: " << filepath << std::endl;
+        return "";
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
 
 GLint Shader::getUniformLoc(const char* name)
 {

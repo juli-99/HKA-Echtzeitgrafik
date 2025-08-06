@@ -13,9 +13,8 @@ std::map<int, std::vector<float>> attenuation= {
 	{325, {1.0, 0.014, 0.0007}},
 };
 
-PointLight::PointLight(Shader& shader)
+PointLight::PointLight(Shader& shader): shader(shader)
 {
-	this->shader = shader;
 }
 
 void PointLight::setPos(glm::vec3 pos)
