@@ -7,23 +7,25 @@
 
 
 // Planetenskalierung relativ zueinander (nur Beispielwerte für Darstellung)
-static constexpr struct PlanetData {
+static const struct PlanetData {
     const char* name;
     float dayLength;
     float orbitalSpeed;
     float distance;
     float scale;
     bool retrograde;
+    fs::path fileName;
+    int unitID;
 } planetData[] = {
-    { "Sonne",   36000,   0.0f,    0.0f, 0.7f, false},
-    { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false},
-    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true},
-    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false},
-    { "Mars",     1477, 24.08f,  227.9f, 0.3f, false},
-    { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false},
-    { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false},
-    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true},
-    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false}
+    { "Sonne",   36000,   0.0f,    0.0f, 0.7f, false, fileSun, 0},
+    { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, fileMercury, 1},
+    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true, fileVenus, 2},
+    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, fileEarth, 3},
+    { "Mars",     1477, 24.08f,  227.9f, 0.3f, false, fileMars, 4},
+    { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, fileJupiter, 5},
+    { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, fileSaturn, 6},
+    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true, fileUranus, 7},
+    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fileNeptune, 8}
 };
 
 SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true) {
@@ -120,7 +122,10 @@ void SolarSystem::initPlanets() {
             data.distance,
             data.scale,
             data.retrograde,
-            &sharedGeometry
+            &sharedGeometry,
+            data.fileName,
+            data.unitID
+
         );
     }
 }

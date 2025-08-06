@@ -7,14 +7,17 @@ Planet::Planet(const std::string& name,
     float distanceFromSunMillionKm,
     float scale,
     bool retrogradeRotation,
-    GeometryBuffer* geometry)
+    GeometryBuffer* geometry,
+    fs::path filePath,
+    int unitID)
     : name(name),
     dayLength(dayLengthMinutes),
     orbitalSpeed(orbitalSpeedKms),
     distanceFromSun(distanceFromSunMillionKm),
     scale(scale),
     retrograde(retrogradeRotation),
-    geometry(geometry)
+    geometry(geometry),
+    texture(filePath, unitID)
 {
         this->geometry = geometry;
 }
@@ -45,4 +48,9 @@ bool Planet::isRetrograde() const {
 
 GeometryBuffer* Planet::getGeometry() const {
    return geometry;
+}
+
+int Planet::getTextureUnit() const
+{
+    return this->texture.getUnitID();
 }

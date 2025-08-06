@@ -12,8 +12,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <stb_image.h>
-
 #include "helper/RootDir.h"
 #include "init.hpp"
 
@@ -23,6 +21,7 @@
 #include "SolarSystem.hpp"
 #include "PointLight.hpp"
 #include "Fps.hpp"
+#include "Texture.hpp"
 
 static const GLuint WIDTH = 1024, HEIGHT = 1024;
 static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 9.0f;
@@ -33,56 +32,12 @@ static const std::filesystem::path fileFragSun = fs::path(ROOT_DIR) / "res/sun.f
 static const std::filesystem::path fileVertSun = fs::path(ROOT_DIR) / "res/sun.vert";
 static const std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
 static const std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
-static const std::filesystem::path fileImage = fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg";
 static const std::filesystem::path fileSphere = fs::path(ROOT_DIR) / "res/sphere.obj";
 
 
 bool isPerspective = true;
 int selectView = 0;
 float distance = DEFAULT_DISTANCE;
-
-struct ImageData
-{
-    unsigned char* data;
-    int width, height, nrChannels;
-};
-
-ImageData loadImage(std::filesystem::path imagePath)
-{
-    // Create Textures
-
-    std::string texturePath = imagePath.string();
-
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* imageData = stbi_load(texturePath.data(), &width, &height, &nrChannels, 0);
-
-    if (!imageData) {
-        std::cerr << "Failed to load texture!" << std::endl;
-    }
-
-    return { imageData, width, height, nrChannels };
-}
-
-GLuint createTexture(ImageData imageData, int unit)
-{
-
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageData.width, imageData.height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData.data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    return texture;
-}
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -120,14 +75,6 @@ int main(int argc, char** argv)
     glfwSetKeyCallback(window, keyCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
-    //Set Texture copy
-    ImageData imageData = loadImage(fileImage);
-    GLuint stoneTexture;
-    if (imageData.data)
-    {
-        stoneTexture = createTexture(imageData, 0);
-        stbi_image_free(imageData.data);
-    }
 
     Shader shader(fileFragLight, fileVertLight);
     shader.use();
@@ -154,7 +101,7 @@ int main(int argc, char** argv)
         float currTime = (float)glfwGetTime();
 
         // clear the window and set Background color
-        glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Move the camera
@@ -213,8 +160,9 @@ int main(int argc, char** argv)
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
 
-            // Setting uniforms
-            shader.setUniform(imageLoc, 0);
+            // Setting image
+
+            shader.setUniform(imageLoc, planet.getTextureUnit());
             shader.setUniform(enablePointLightLoc, planet.getName() != "Sonne");
 
             PointLight pointerLight(shader);

@@ -3,6 +3,10 @@
 #include <string>
 #include <glm/glm.hpp>
 #include "GeometryBuffer.hpp"
+#include "Texture.hpp"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 class Planet {
 public:
@@ -12,7 +16,9 @@ public:
         float distanceFromSun_millionKm,
         float scale,
         bool retrogradeRotation,
-        GeometryBuffer* geometry);
+        GeometryBuffer* geometry,
+        fs::path filePath,
+        int unitID);
 
     const std::string& getName() const;
     float getDayLength() const;
@@ -20,7 +26,9 @@ public:
     float getDistanceFromSun() const;
     float getScale() const;
     bool  isRetrograde() const;
-       GeometryBuffer* getGeometry() const;
+    GeometryBuffer* getGeometry() const;
+    int getTextureUnit() const;
+    
 
 private:
     std::string name;
@@ -30,4 +38,5 @@ private:
     float scale;                  // visueller Skalierungsfaktor
     bool retrograde;
     GeometryBuffer* geometry;
+    Texture texture;
 };
