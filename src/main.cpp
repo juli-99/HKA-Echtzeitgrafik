@@ -191,9 +191,9 @@ int main(int argc, char** argv)
         }
 
         // Setting uniforms that don't change per Planet
-        /*newShader.setUniform(viewLoc, view);
-        newShader.setUniform(perspectiveLoc, projection);
-        newShader.setUniform(viewPosLoc, viewPos);*/
+        shader.setUniform(viewLoc, view);
+        shader.setUniform(perspectiveLoc, projection);
+        shader.setUniform(viewPosLoc, viewPos);
 
         for (const Planet& planet : solarSystem.getPlanets()) {
 
@@ -213,8 +213,6 @@ int main(int argc, char** argv)
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
 
-            //Set Light Position
-
             // Setting uniforms
             shader.setUniform(imageLoc, 0);
             shader.setUniform(enablePointLightLoc, planet.getName() != "Sonne");
@@ -222,10 +220,6 @@ int main(int argc, char** argv)
             PointLight pointerLight(shader);
 
             pointerLight.setModel(model);
-            pointerLight.setView(view);
-            pointerLight.setProjection(projection);
-            pointerLight.setViewPos(viewPos);
-
             pointerLight.setPos(lightPos);
             pointerLight.setDistance(lightDistance);
             pointerLight.setColor(lightColor);
