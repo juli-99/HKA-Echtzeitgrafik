@@ -98,7 +98,6 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Move the camera
-        glm::mat4  view = glm::mat4(1.0f);
         float viewAngle;
         glm::vec3 viewPos;
         switch (selectView) {
@@ -118,6 +117,7 @@ int main(int argc, char** argv)
             viewAngle = glm::radians(0.0f);
             break;
         }
+        glm::mat4  view = glm::mat4(1.0f);
         view = glm::rotate(view, viewAngle, glm::vec3(1.0f, 0.0f, 0.0f));
         view = glm::translate(view, viewPos);
 
@@ -134,10 +134,6 @@ int main(int argc, char** argv)
         shader.setUniform(viewLoc, view);
         shader.setUniform(perspectiveLoc, projection);
         shader.setUniform(viewPosLoc, viewPos);
-        int posLoc = shader.getUniformLoc("u_Light.pos");
-        shader.setUniform(posLoc, pointLight.getPos());
-        int colorLoc = shader.getUniformLoc("u_Light.color");
-        shader.setUniform(colorLoc, pointLight.getColor());
 
         for (const Planet& planet : solarSystem.getPlanets()) {
 
@@ -158,11 +154,11 @@ int main(int argc, char** argv)
 
             shader.setUniform(modelLoc, model);
 
+            pointLight.applyToShader(shader, lightDistance);
+
             // Setting image
             shader.setUniform(imageLoc, planet.getTextureUnit());
             shader.setUniform(enablePointLightLoc, planet.getName() != "Sonne");
-
-            pointLight.shader(shader, lightDistance);
 
 
             planet.getGeometry()->bind();

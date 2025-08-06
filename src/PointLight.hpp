@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include <map>
 #define GLEW_STATIC
 #include <GL/glew.h> // has to be included first!
@@ -23,9 +23,10 @@ public:
     glm::vec3 getPos();
     glm::vec3 getColor();
 
-    void shader(Shader shader, int distance);
+    void applyToShader(Shader shader, int distance);
 
 private:
     glm::vec3 pos;
     glm::vec3 color;
+    static const std::map<int, const std::array<const float, 3>> attenuation;
 };
