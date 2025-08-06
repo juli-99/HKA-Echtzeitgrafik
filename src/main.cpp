@@ -27,6 +27,8 @@ static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE =
 
 static const std::filesystem::path fileFrag = fs::path(ROOT_DIR) / "res/shader.frag";
 static const std::filesystem::path fileVert = fs::path(ROOT_DIR) / "res/shader.vert";
+static const std::filesystem::path fileFragSun = fs::path(ROOT_DIR) / "res/sun.frag";
+static const std::filesystem::path fileVertSun = fs::path(ROOT_DIR) / "res/sun.vert";
 static const std::filesystem::path fileFragLight = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
 static const std::filesystem::path fileVertLight = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
 
@@ -74,6 +76,10 @@ int main(int argc, char** argv)
     //For the Light
     Shader lightShader;
     lightShader.createShaderPipline(fileFragLight, fileVertLight);
+
+    //For the sun
+    Shader sunShader;
+    sunShader.createShaderPipline(fileFragSun, fileVertSun);
 
     Shader newShader;
     newShader.createShaderPipline(fileFrag, fileVert);
@@ -167,6 +173,20 @@ int main(int argc, char** argv)
             pointerLight.setPos(lightPos);
             pointerLight.setDistance(lightDistance);
             pointerLight.setColor(lightColor);
+
+            if (planet.getName() == "Sonne") {
+                sunShader.use();
+                int modelLoc =sunShader.getUniformLoc("u_model");
+                sunShader.setUniform(modelLoc, model);
+                int viewLoc = sunShader.getUniformLoc("u_view");
+                sunShader.setUniform(viewLoc, view);
+                int perspectiveLoc = sunShader.getUniformLoc("u_projection");
+                sunShader.setUniform(perspectiveLoc, projection);
+                int viewPosLoc = sunShader.getUniformLoc("u_viewPos");
+                sunShader.setUniform(viewPosLoc, viewPos);
+                int emissiveC = sunShader.getUniformLoc("u_EmissiveColor");
+                sunShader.setUniform(emissiveC, glm::vec3(1.0f, 1.0f, 0.8f));
+            }
 
 
             planet.getGeometry()->bind();
