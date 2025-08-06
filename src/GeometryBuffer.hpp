@@ -34,8 +34,6 @@ public:
 
     void LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset);
 
-    GLuint getVAO() const { return vao_; }
-
     int getSizeVertex();
     int getSizeIndices();
 
@@ -45,10 +43,10 @@ public:
     
 
 private:
-    GLuint vao_;
-    GLuint vbo_;
-    GLuint ebo_;
-    bool hasEBO_;
+    GLuint vao;
+    GLuint vbo;
+    GLuint ebo;
+    bool eboActive;
 
     GLsizei vertexSize;
     GLsizei indicesSize;

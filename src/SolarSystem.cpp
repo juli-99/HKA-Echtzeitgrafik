@@ -15,7 +15,7 @@ static const struct PlanetData {
     float distance;
     float scale;
     bool retrograde;
-    fs::path fileName;
+    fs::path filePath;
     int unitID;
 } planetData[] = {
     { "Sonne",   36000,   0.0f,    0.0f, 0.9f, false, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
@@ -37,7 +37,7 @@ SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeomet
 SolarSystem::~SolarSystem() {}
 
 const std::vector<Planet>& SolarSystem::getPlanets() const {
-    return planets;
+    return this->planets;
 }
 
 void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
@@ -107,21 +107,21 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
         }
     }
 
-    sharedGeometry.uploadVertexData(vertices.data(), vertices.size() * sizeof(float));
-    sharedGeometry.uploadIndexData(indices.data(), indices.size() * sizeof(unsigned int));
-    sharedGeometry.LinkAttrib(0, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)0);
-    sharedGeometry.LinkAttrib(1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    this->sharedGeometry.uploadVertexData(vertices.data(), vertices.size() * sizeof(float));
+    this->sharedGeometry.uploadIndexData(indices.data(), indices.size() * sizeof(unsigned int));
+    this->sharedGeometry.LinkAttrib(0, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)0);
+    this->sharedGeometry.LinkAttrib(1, 3, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
-    sharedGeometry.LinkAttrib(2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+    this->sharedGeometry.LinkAttrib(2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 
-    sharedGeometry.setSizeVertex(vertices.size());
-    sharedGeometry.setSizeIndices(indices.size());
+    this->sharedGeometry.setSizeVertex(vertices.size());
+    this->sharedGeometry.setSizeIndices(indices.size());
 }
 
 void SolarSystem::initPlanets() {
-    planets.reserve(sizeof(planetData) / sizeof(PlanetData));
+    this->planets.reserve(sizeof(planetData) / sizeof(PlanetData));
     for (const auto& data : planetData) {
-        planets.emplace_back(
+        this->planets.emplace_back(
             data.name,
             data.dayLength,
             data.orbitalSpeed,
@@ -129,7 +129,7 @@ void SolarSystem::initPlanets() {
             data.scale,
             data.retrograde,
             &sharedGeometry,
-            data.fileName,
+            data.filePath,
             data.unitID
 
         );

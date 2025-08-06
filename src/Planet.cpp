@@ -24,31 +24,31 @@ Planet::Planet(const std::string& name,
 }
 
 const std::string& Planet::getName() const {
-    return name;
+    return this->name;
 }
 
 float Planet::getDayLength() const {
-    return dayLength;
+    return this->dayLength;
 }
 
 float Planet::getOrbitalSpeed() const {
-    return orbitalSpeed;
+    return this->orbitalSpeed;
 }
 
 float Planet::getDistanceFromSun() const {
-    return distanceFromSun;
+    return this->distanceFromSun;
 }
 
 float Planet::getScale() const {
-    return scale;
+    return this->scale;
 }
 
 bool Planet::getRetrograde() const {
-    return retrograde;
+    return this->retrograde;
 }
 
 GeometryBuffer* Planet::getGeometry() const {
-   return geometry;
+   return this->geometry;
 }
 
 int Planet::getTextureUnit() const

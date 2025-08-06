@@ -52,8 +52,8 @@ Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter,
 
 Texture::~Texture()
 {
-    std::cout << texture << std::endl;
-    glDeleteTextures(1, &texture);
+    std::cout << this->texture << std::endl;
+    glDeleteTextures(1, &(this->texture));
 
 }
 
