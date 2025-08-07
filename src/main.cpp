@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 
     SolarSystem solarSystem = SolarSystem(SPHERE_OBJ_PATH);
 
-    PointLight pointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    PointLight pointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.3f, 0.3f));
 
     Fps fps( [](int fps){std::cout << fps << std::endl;} );
     fps.start();
