@@ -20,8 +20,8 @@ public:
 
     void setPos(glm::vec3 pos);
     void setColor(glm::vec3 color);
-    glm::vec3 getPos();
-    glm::vec3 getColor();
+    glm::vec3 getPos() const;
+    glm::vec3 getColor() const;
 
     void applyToShader(Shader shader, int distance);
 

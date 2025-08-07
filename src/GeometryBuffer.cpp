@@ -1,11 +1,6 @@
 #include "GeometryBuffer.hpp"
 
 
-
-
-//vbo -> creates Buffer with data
-//vao -> pointer on one or more Buffers
-
 GeometryBuffer::GeometryBuffer(bool useElementBuffer)
     : vao(0), vbo(0), ebo(0), eboActive(useElementBuffer), vertexSize(0), indicesSize(0)
 {
@@ -18,7 +13,6 @@ GeometryBuffer::GeometryBuffer(bool useElementBuffer)
         
     }
 }
-
 
 //Move-Assignment
 GeometryBuffer& GeometryBuffer::operator=(GeometryBuffer&& other) noexcept
@@ -49,7 +43,6 @@ GeometryBuffer& GeometryBuffer::operator=(GeometryBuffer&& other) noexcept
     return *this;
 };
 
-
 //Move-Konstruktor
 GeometryBuffer::GeometryBuffer(GeometryBuffer&& other) noexcept
     : vao(other.vao), vbo(other.vbo), ebo(other.ebo), eboActive(other.eboActive), vertexSize(other.vertexSize), indicesSize(other.indicesSize)
@@ -61,9 +54,8 @@ GeometryBuffer::GeometryBuffer(GeometryBuffer&& other) noexcept
 
 }
 
-
-
-GeometryBuffer::~GeometryBuffer() {
+GeometryBuffer::~GeometryBuffer()
+{
     if (this->eboActive && this->ebo != 0)
         glDeleteBuffers(1, &this->ebo);
     if (this->vbo != 0)
@@ -72,7 +64,8 @@ GeometryBuffer::~GeometryBuffer() {
     glDeleteVertexArrays(1, &this->vao);
 }
 
-void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum usage) {
+void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum usage)
+{
 
     vertexSize = size;
 
@@ -83,7 +76,8 @@ void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum 
     glBindVertexArray(0);
 }
 
-void GeometryBuffer::uploadIndexData(const void* data, GLsizeiptr size, GLenum usage) {
+void GeometryBuffer::uploadIndexData(const void* data, GLsizeiptr size, GLenum usage)
+{
     if (!this->eboActive)
         return;
 
@@ -96,15 +90,17 @@ void GeometryBuffer::uploadIndexData(const void* data, GLsizeiptr size, GLenum u
     glBindVertexArray(0);
 }
 
-void GeometryBuffer::bind() const {
+void GeometryBuffer::bind() const
+{
     glBindVertexArray(this->vao);
 }
 
-void GeometryBuffer::unbind() const {
+void GeometryBuffer::unbind() const
+{
     glBindVertexArray(0);
 }
 
-void GeometryBuffer::LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset)
+void GeometryBuffer::LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset) const
 {
     glBindVertexArray(this->vao);
     glVertexAttribPointer(layout, numComponents, type, GL_FALSE, string, offset); //Position of Vertex Attribute; Values per Vertex; Which Values Type; Coordinates as int; Data between each Vertex; Offset
@@ -112,21 +108,23 @@ void GeometryBuffer::LinkAttrib(GLuint layout, GLuint numComponents, GLenum type
     glBindVertexArray(0);
 }
 
-GLsizei GeometryBuffer::getSizeVertex()
+GLsizei GeometryBuffer::getSizeVertex() const
 {
     return this->vertexSize;
 }
 
-GLsizei GeometryBuffer::getSizeIndices()
+GLsizei GeometryBuffer::getSizeIndices() const
 {
     return this->indicesSize;
 }
 
-void GeometryBuffer::setSizeIndices(GLsizei size) {
+void GeometryBuffer::setSizeIndices(GLsizei size)
+{
     this->vertexSize = size;
 }
 
-void GeometryBuffer::setSizeVertex(GLsizei size) {
+void GeometryBuffer::setSizeVertex(GLsizei size)
+{
     this->indicesSize = size;
 }
 

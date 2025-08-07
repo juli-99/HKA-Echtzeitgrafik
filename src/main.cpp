@@ -49,7 +49,8 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
-static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
     distance -= (float)yoffset;
     if (distance < MIN_DISTANCE)
         distance = MIN_DISTANCE;
@@ -79,9 +80,9 @@ int main(int argc, char** argv)
 
     int lightDistance = 100; //TODO
 
-    SolarSystem solarSystem = SolarSystem(SPHERE_OBJ_PATH);
+    SolarSystem solarSystem(SPHERE_OBJ_PATH);
 
-    PointLight pointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.3f, 0.3f));
+    PointLight pointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
     Fps fps( [](int fps){std::cout << fps << std::endl;} );
     fps.start();
@@ -132,7 +133,8 @@ int main(int argc, char** argv)
         shader.setUniform(perspectiveLoc, projection);
         shader.setUniform(viewPosLoc, viewPos);
 
-        for (const Planet& planet : solarSystem.getPlanets()) {
+        for (const Planet& planet : solarSystem.getPlanets())
+        {
 
             float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
             angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed

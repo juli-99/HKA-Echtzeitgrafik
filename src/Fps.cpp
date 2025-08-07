@@ -7,20 +7,25 @@ Fps::Fps(std::function<void(int)> callback)
     this->prevTime = -1;
 }
 
-void Fps::start() {
+void Fps::start()
+{
     this->nbFrames = 0;
     this->prevTime = glfwGetTime();
 }
 
-void Fps::stop() {
+void Fps::stop()
+{
     this->prevTime = -1;
 }
 
-void Fps::countFrame() {
+void Fps::countFrame()
+{
     double time = glfwGetTime();
-    if (prevTime != -1) { // check if started
+    if (prevTime != -1) // check if started
+    {
         this->nbFrames++;
-        if (time - prevTime >= 1.0) {
+        if (time - prevTime >= 1.0)
+        {
             this->prevTime = time;
 
             this->callback(nbFrames);

@@ -13,7 +13,6 @@
 
 #include "helper/RootDir.h"
 
-#define INFOLOG_LEN 512
 namespace fs = std::filesystem;
 
 
@@ -28,10 +27,11 @@ public:
     void setUniform(GLint location, const glm::vec3& value);
     void setUniform(GLint location, const glm::vec4& value);
     void setUniform(GLint location, const glm::mat4& value);
-    GLint getUniformLoc(const char* name);
-    GLint getShaderProgram();
+    GLint getUniformLoc(const char* name) const;
+    GLint getShaderProgram() const;
     void use();
 private:
+    static const int INFOLOG_LEN;
     GLint shaderProgram;
     
     static std::string loadShaderSource(std::string filepath);

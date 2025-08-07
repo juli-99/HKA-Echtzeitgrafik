@@ -32,10 +32,10 @@ public:
     void bind() const;
     void unbind() const;
 
-    void LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset);
+    void LinkAttrib(GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr string, void* offset) const;
 
-    int getSizeVertex();
-    int getSizeIndices();
+    int getSizeVertex() const;
+    int getSizeIndices() const;
 
     void setSizeIndices(GLsizei indicesSize);
     void setSizeVertex(GLsizei vertexSize);

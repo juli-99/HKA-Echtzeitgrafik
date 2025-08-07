@@ -35,12 +35,12 @@ void PointLight::setColor(glm::vec3 color)
 	this->color = color;
 }
 
-glm::vec3 PointLight::getPos()
+glm::vec3 PointLight::getPos() const
 {
 	return this->pos;
 }
 
-glm::vec3 PointLight::getColor()
+glm::vec3 PointLight::getColor() const
 {
 	return this->color;
 }

@@ -29,14 +29,18 @@ static const struct PlanetData {
     { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8}
 };
 
-SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true) {
+SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true)
+{
     loadMeshFromFile(spherePath);
     initPlanets();
 }
 
-SolarSystem::~SolarSystem() {}
+SolarSystem::~SolarSystem()
+{
+}
 
-const std::vector<Planet>& SolarSystem::getPlanets() const {
+const std::vector<Planet>& SolarSystem::getPlanets() const
+{
     return this->planets;
 }
 
@@ -118,7 +122,8 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
     this->sharedGeometry.setSizeIndices(indices.size());
 }
 
-void SolarSystem::initPlanets() {
+void SolarSystem::initPlanets()
+{
     this->planets.reserve(sizeof(planetData) / sizeof(PlanetData));
     for (const auto& data : planetData) {
         this->planets.emplace_back(

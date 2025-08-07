@@ -5,7 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext = false) {
+GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext = false)
+{
     GLFWwindow* window; //create new Window
 
     if (glfwInit() == 0) { //Create Window faild?	

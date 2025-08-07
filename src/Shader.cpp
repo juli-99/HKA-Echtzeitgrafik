@@ -1,5 +1,7 @@
 #include "Shader.hpp"
 
+const int Shader::INFOLOG_LEN = 512;
+
 
 Shader::Shader(const std::filesystem::path fileFrag, const std::filesystem::path fileVert)
 {
@@ -79,7 +81,7 @@ std::string Shader::loadShaderSource(std::string filepath)
     return buffer.str();
 }
 
-GLint Shader::getUniformLoc(const char* name)
+GLint Shader::getUniformLoc(const char* name) const
 {
     return glGetUniformLocation(this->shaderProgram, name);
 }
@@ -119,6 +121,7 @@ void Shader::use()
     glUseProgram(this->shaderProgram);
 }
 
-GLint Shader::getShaderProgram() {
+GLint Shader::getShaderProgram() const
+{
     return this->shaderProgram;
 }

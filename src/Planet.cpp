@@ -20,34 +20,40 @@ Planet::Planet(const std::string& name,
     geometry(geometry),
     texture(filePath, unitID, GL_LINEAR_MIPMAP_LINEAR, GL_CLAMP_TO_EDGE)
 {
-        this->geometry = geometry;
 }
 
-const std::string& Planet::getName() const {
+const std::string& Planet::getName() const
+{
     return this->name;
 }
 
-float Planet::getDayLength() const {
+float Planet::getDayLength() const
+{
     return this->dayLength;
 }
 
-float Planet::getOrbitalSpeed() const {
+float Planet::getOrbitalSpeed() const
+{
     return this->orbitalSpeed;
 }
 
-float Planet::getDistanceFromSun() const {
+float Planet::getDistanceFromSun() const
+{
     return this->distanceFromSun;
 }
 
-float Planet::getScale() const {
+float Planet::getScale() const
+{
     return this->scale;
 }
 
-bool Planet::getRetrograde() const {
+bool Planet::getRetrograde() const
+{
     return this->retrograde;
 }
 
-GeometryBuffer* Planet::getGeometry() const {
+GeometryBuffer* Planet::getGeometry() const
+{
    return this->geometry;
 }
 

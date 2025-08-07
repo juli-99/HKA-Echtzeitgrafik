@@ -1,5 +1,4 @@
 #include "Texture.hpp"
-#include "Texture.hpp"
 
 
 ImageData Texture::loadImage(std::filesystem::path imagePath)
@@ -12,7 +11,8 @@ ImageData Texture::loadImage(std::filesystem::path imagePath)
     stbi_set_flip_vertically_on_load(true);
     unsigned char* imageData = stbi_load(texturePath.data(), &width, &height, &nrChannels, 0);
 
-    if (!imageData) {
+    if (!imageData)
+    {
         std::cerr << "Failed to load texture!" << std::endl;
     }
 
@@ -39,7 +39,8 @@ GLuint Texture::createTexture(ImageData imageData, int unit, GLint mipmapFilter,
     return texture;
 }
 
-Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter, GLint textureWraper) {
+Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter, GLint textureWraper)
+{
     this->unitID = unit;
     ImageData imageData = loadImage(fileImage);
     if (imageData.data)
@@ -47,7 +48,7 @@ Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter,
 
         this->texture = createTexture(imageData, unit, textureFilter, textureWraper);
         stbi_image_free(imageData.data);
-    }
+    } 
 }
 
 Texture::~Texture()
