@@ -24,6 +24,12 @@ struct ImageData
 
 
 class Texture {
+public:
+    Texture(std::filesystem::path fileImage, int unit, GLint mipmapFilter, GLint textureWraper);
+    ~Texture();
+
+    int getUnitID() const;
+
 private:
     ImageData loadImage(std::filesystem::path imagePath);
     GLuint createTexture(ImageData imageData, int unit, GLint mipmapFilter, GLint textureWraper);
@@ -36,13 +42,4 @@ private:
     //Texture& operator=(const Texture&) = delete;
     //Texture(Texture&& other) noexcept;
     //Texture& operator=(Texture&& other) noexcept;
-   
-
-public:
-    Texture(std::filesystem::path fileImage, int unit, GLint mipmapFilter, GLint textureWraper);
-    ~Texture();
-    int getUnitID() const;
-    
-
-
 };

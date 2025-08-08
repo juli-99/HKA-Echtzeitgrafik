@@ -1,5 +1,28 @@
 #include "Texture.hpp"
 
+Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter, GLint textureWraper)
+{
+    this->unitID = unit;
+    ImageData imageData = loadImage(fileImage);
+    if (imageData.data)
+    {
+
+        this->texture = createTexture(imageData, unit, textureFilter, textureWraper);
+        stbi_image_free(imageData.data);
+    }
+}
+
+Texture::~Texture()
+{
+    std::cout << this->texture << std::endl;
+    glDeleteTextures(1, &(this->texture));
+
+}
+
+int Texture::getUnitID() const
+{
+    return this->unitID;
+}
 
 ImageData Texture::loadImage(std::filesystem::path imagePath)
 {
@@ -38,28 +61,3 @@ GLuint Texture::createTexture(ImageData imageData, int unit, GLint mipmapFilter,
 
     return texture;
 }
-
-Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter, GLint textureWraper)
-{
-    this->unitID = unit;
-    ImageData imageData = loadImage(fileImage);
-    if (imageData.data)
-    {
-
-        this->texture = createTexture(imageData, unit, textureFilter, textureWraper);
-        stbi_image_free(imageData.data);
-    } 
-}
-
-Texture::~Texture()
-{
-    std::cout << this->texture << std::endl;
-    glDeleteTextures(1, &(this->texture));
-
-}
-
-int Texture::getUnitID() const
-{
-    return this->unitID;
-}
-
