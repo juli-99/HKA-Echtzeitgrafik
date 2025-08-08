@@ -6,7 +6,6 @@ Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter,
     ImageData imageData = loadImage(fileImage);
     if (imageData.data)
     {
-
         this->texture = createTexture(imageData, unit, textureFilter, textureWraper);
         stbi_image_free(imageData.data);
     }
@@ -14,9 +13,7 @@ Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter,
 
 Texture::~Texture()
 {
-    std::cout << this->texture << std::endl;
     glDeleteTextures(1, &(this->texture));
-
 }
 
 int Texture::getUnitID() const
@@ -26,8 +23,6 @@ int Texture::getUnitID() const
 
 ImageData Texture::loadImage(std::filesystem::path imagePath)
 {
-    // Create Textures
-
     std::string texturePath = imagePath.string();
 
     int width, height, nrChannels;
@@ -44,7 +39,6 @@ ImageData Texture::loadImage(std::filesystem::path imagePath)
 
 GLuint Texture::createTexture(ImageData imageData, int unit, GLint mipmapFilter, GLint textureWraper)
 {
-
     unsigned int texture;
     glGenTextures(1, &texture);
     glActiveTexture(GL_TEXTURE0 + unit);
@@ -54,7 +48,6 @@ GLuint Texture::createTexture(ImageData imageData, int unit, GLint mipmapFilter,
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWraper);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWraper);
-
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmapFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
