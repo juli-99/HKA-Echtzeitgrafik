@@ -23,7 +23,7 @@ public:
     glm::vec3 getPos() const;
     glm::vec3 getColor() const;
 
-    void applyToShader(Shader shader, int distance);
+    void applyToShader(Shader& shader, int distance);
 
 private:
     glm::vec3 pos;

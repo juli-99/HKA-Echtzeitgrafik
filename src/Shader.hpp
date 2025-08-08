@@ -10,7 +10,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 #include "helper/RootDir.h"
 
 namespace fs = std::filesystem;
@@ -20,6 +19,14 @@ namespace fs = std::filesystem;
 class Shader {
 public: 
     Shader(const std::filesystem::path FileFrag, const std::filesystem::path FileVert);
+    ~Shader();
+
+    //Copy-Konstruktor deaktiviert
+    Shader(const Shader&) = delete;
+    //Copy-Assignment deaktiviert
+    Shader& operator=(const Shader&) = delete;
+    Shader(Shader&& other) noexcept;
+    Shader& operator=(Shader&& other) noexcept;
 	
     void setUniform(GLint location, bool value);
     void setUniform(GLint location, int value);

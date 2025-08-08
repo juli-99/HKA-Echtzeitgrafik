@@ -68,6 +68,11 @@ Shader::Shader(const std::filesystem::path fileFrag, const std::filesystem::path
         this->shaderProgram = shaderProgram;
 }
 
+Shader::~Shader()
+{
+    glDeleteProgram(this->shaderProgram);
+}
+
 std::string Shader::loadShaderSource(std::string filepath)
 {
     std::ifstream file(filepath);

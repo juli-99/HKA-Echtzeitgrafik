@@ -45,7 +45,7 @@ glm::vec3 PointLight::getColor() const
 	return this->color;
 }
 
-void PointLight::applyToShader(Shader shader, int distance)
+void PointLight::applyToShader(Shader& shader, int distance)
 {
 	int posLoc = shader.getUniformLoc("u_Light.pos");
 	shader.setUniform(posLoc, this->pos);
