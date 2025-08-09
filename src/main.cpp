@@ -24,8 +24,10 @@
 #include "Texture.hpp"
 
 static const GLuint WIDTH = 1024, HEIGHT = 1024;
-static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 40.0f, DEFAULT_DISTANCE = 6.0f;
+static const float MIN_DISTANCE = 2.0f, MAX_DISTANCE = 80.0f, DEFAULT_DISTANCE = 6.0f;
 static const float DISTANCE_SCALE = 0.01f, ORBIT_SPEED_SCALE = 1.0f, ROTATION_SPEED_SCALE = 0.01f;
+static const int POINTLIGHT_RANGE = 200;
+
 
 static const std::filesystem::path SHADER_PATH_FRAG = fs::path(ROOT_DIR) / "res/pointLightShader.frag";
 static const std::filesystem::path SHADER_PATH_VERT = fs::path(ROOT_DIR) / "res/pointLightShader.vert";
@@ -77,8 +79,6 @@ int main(int argc, char** argv)
     const int enablePointLightLoc = shader.getUniformLoc("u_enablePointLight");
     const int imageLoc = shader.getUniformLoc("u_image");
 
-
-    int lightDistance = 100; //TODO
 
     SolarSystem solarSystem(SPHERE_OBJ_PATH);
 
@@ -134,6 +134,8 @@ int main(int argc, char** argv)
         shader.setUniform(perspectiveLoc, projection);
         shader.setUniform(viewPosLoc, viewPos);
 
+        pointLight.applyToShader(shader, POINTLIGHT_RANGE);
+
         for (const Planet& planet : solarSystem.getPlanets())
         {
 
@@ -153,8 +155,6 @@ int main(int argc, char** argv)
             model = glm::scale(model, glm::vec3(planet.getScale()));
 
             shader.setUniform(modelLoc, model);
-
-            pointLight.applyToShader(shader, lightDistance);
 
             // Setting image
             shader.setUniform(imageLoc, planet.getTextureUnit());
