@@ -26,7 +26,8 @@ static const struct PlanetData {
     { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, fs::path(ROOT_DIR) / "res/textures/2k_jupiter.jpg", 5},
     { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, fs::path(ROOT_DIR) / "res/textures/2k_saturn.jpg", 6},
     { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true,  fs::path(ROOT_DIR) / "res/textures/2k_uranus.jpg", 7},
-    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8}
+    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8},
+    { "Moon",    1436,  39.78f, 199.6f, 0.135f, false, fs::path(ROOT_DIR) / "res/textures/2k_moon.jpg", 9 }
 };
 
 SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true)
