@@ -17,6 +17,7 @@ public:
         float distanceFromSun_millionKm,
         float scale,
         bool retrogradeRotation,
+        int linkPlanet,
         GeometryBuffer* geometry,
         fs::path filePath,
         int unitID);
@@ -24,26 +25,22 @@ public:
     const std::string& getName() const;
     float getDayLength() const;
     float getOrbitalSpeed() const;
-    float getDistanceFromSun() const;
+    float getDistance() const;
     float getScale() const;
     bool  getRetrograde() const;
     GeometryBuffer* getGeometry() const;
     int getTextureUnit() const;
-
-    ~Planet();
-    Planet(const Planet&) = delete;
-    Planet& operator=(const Planet&) = delete;
-    Planet(Planet&& other) noexcept;
-    Planet& operator=(Planet&& other) noexcept;
+    int getlinkPlanet() const;
 
     
 private:
     std::string name;
     float dayLength;              // in Minutes
     float orbitalSpeed;           // in km/s
-    float distanceFromSun;        // in Millionen km
+    float distance;        // in Millionen km
     float scale;                  // visueller Skalierungsfaktor
     bool retrograde;
+    int linkPlanet;
     GeometryBuffer* geometry;
     Texture texture;
 };

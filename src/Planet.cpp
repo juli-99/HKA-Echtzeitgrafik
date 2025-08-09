@@ -5,56 +5,23 @@
 Planet::Planet(const std::string& name,
     float dayLengthMinutes,
     float orbitalSpeedKms,
-    float distanceFromSunMillionKm,
+    float distanceMillionKm,
     float scale,
     bool retrogradeRotation,
+    int linkPlanet,
     GeometryBuffer* geometry,
     fs::path filePath,
     int unitID)
     : name(name),
     dayLength(dayLengthMinutes),
     orbitalSpeed(orbitalSpeedKms),
-    distanceFromSun(distanceFromSunMillionKm),
+    distance(distanceMillionKm),
     scale(scale),
     retrograde(retrogradeRotation),
+    linkPlanet(linkPlanet),
     geometry(geometry),
     texture(filePath, unitID, GL_LINEAR_MIPMAP_LINEAR, GL_CLAMP_TO_EDGE)
 {
-}
-
-//Deconstructor
-Planet::~Planet() = default;
-
-// Move constructor
-Planet::Planet(Planet&& other) noexcept
-    : name(std::move(other.name)),
-    dayLength(other.dayLength),
-    orbitalSpeed(other.orbitalSpeed),
-    distanceFromSun(other.distanceFromSun),
-    scale(other.scale),
-    retrograde(other.retrograde),
-    geometry(other.geometry),
-    texture(std::move(other.texture))
-{
-    other.geometry = nullptr;
-}
-
-//Move Assignment
-Planet& Planet::operator=(Planet&& other) noexcept {
-    if (this != &other)
-    {
-        this->name = std::move(other.name);
-        this->dayLength = other.dayLength;
-        this->orbitalSpeed = other.orbitalSpeed;
-        this->distanceFromSun = other.distanceFromSun;
-        this->scale = other.scale;
-        this->retrograde = other.retrograde;
-        this->geometry = other.geometry;
-        this->texture = std::move(other.texture);
-
-        other.geometry = nullptr;
-    }
-    return *this;
 }
 
 const std::string& Planet::getName() const
@@ -72,9 +39,9 @@ float Planet::getOrbitalSpeed() const
     return this->orbitalSpeed;
 }
 
-float Planet::getDistanceFromSun() const
+float Planet::getDistance() const
 {
-    return this->distanceFromSun;
+    return this->distance;
 }
 
 float Planet::getScale() const
@@ -95,4 +62,9 @@ GeometryBuffer* Planet::getGeometry() const
 int Planet::getTextureUnit() const
 {
     return this->texture.getUnitID();
+}
+
+int Planet::getlinkPlanet() const
+{
+    return this->linkPlanet;
 }

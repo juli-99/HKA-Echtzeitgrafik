@@ -15,19 +15,21 @@ static const struct PlanetData {
     float distance;
     float scale;
     bool retrograde;
+    int linkPlanet;
     fs::path filePath;
     int unitID;
+    
 } planetData[] = {
-    { "Sonne",   36000,   0.0f,    0.0f, 0.9f, false, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
-    { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, fs::path(ROOT_DIR) / "res/textures/2k_mercury.jpg", 1},
-    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true,  fs::path(ROOT_DIR) / "res/textures/2k_venus.jpg", 2},
-    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg", 3},
-    { "Mars",     1477, 24.08f,  227.9f, 0.3f, false, fs::path(ROOT_DIR) / "res/textures/2k_mars.jpg", 4},
-    { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, fs::path(ROOT_DIR) / "res/textures/2k_jupiter.jpg", 5},
-    { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, fs::path(ROOT_DIR) / "res/textures/2k_saturn.jpg", 6},
-    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true,  fs::path(ROOT_DIR) / "res/textures/2k_uranus.jpg", 7},
-    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8},
-    { "Moon",    1436,  39.78f, 199.6f, 0.135f, false, fs::path(ROOT_DIR) / "res/textures/2k_moon.jpg", 9 }
+    { "Sonne",   36000,   0.0f,    0.0f, 0.9f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
+    { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_mercury.jpg", 1},
+    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true, 0,  fs::path(ROOT_DIR) / "res/textures/2k_venus.jpg", 2},
+    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg", 3},
+    { "Mars",     1477, 24.08f,  227.9f, 0.3f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_mars.jpg", 4},
+    { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_jupiter.jpg", 5},
+    { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_saturn.jpg", 6},
+    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true, 0,  fs::path(ROOT_DIR) / "res/textures/2k_uranus.jpg", 7},
+    { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8},
+    { "Mond",    1436,  39.78f, 25.5f, 0.135f, false, 3, fs::path(ROOT_DIR) / "res/textures/2k_moon.jpg", 9 } // Distance to Earth is not correct
 };
 
 SolarSystem::SolarSystem(const std::filesystem::path& spherePath) : sharedGeometry(true)
@@ -49,9 +51,7 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
 {
     Assimp::Importer importer;
 
-    // And have it read the given file with some example postprocessing
-    // Usually - if speed is not the most important aspect for you - you’ll
-    // probably to request more postprocessing than we do in this example.
+   
     const aiScene* scene = importer.ReadFile(spherePath.string(),
         aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
         aiProcess_SortByPType | aiProcess_PreTransformVertices);
@@ -108,9 +108,6 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
     for (unsigned int k = 0; k < mesh->mNumFaces; k++)
     {
         aiFace& face = mesh->mFaces[k];
-        // Copy the index values to the vector "indices" above
-        // We can assume that there are only 3 indices per face
-        // because we set the aiProcess_Triangulate flag during the import.
         for (unsigned int j = 0; j < face.mNumIndices; j++)
         {
             indices.push_back(face.mIndices[j]);
@@ -140,10 +137,10 @@ void SolarSystem::initPlanets()
             data.distance,
             data.scale,
             data.retrograde,
+            data.linkPlanet,
             &sharedGeometry,
             data.filePath,
             data.unitID
-
         );
     }
 }

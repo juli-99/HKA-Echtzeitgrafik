@@ -121,12 +121,12 @@ int main(int argc, char** argv)
 
         // Set perspective
         glm::mat4 projection;
+        float aspectratio = float(WIDTH) / float(HEIGHT);
         if (isPerspective)
-            projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
+            projection = glm::perspective(glm::radians(45.0f), aspectratio, 0.1f, 1000.0f);
         else
         {
-            float tmpDist = distance / 9; // fix scaling
-            projection = glm::ortho(-4.0f * tmpDist, 4.0f * tmpDist, -3.0f * tmpDist, 3.0f * tmpDist, 0.1f, 1000.0f);
+            projection = glm::ortho(- distance / 2 * aspectratio,  distance / 2 * aspectratio,  -distance / 2,  distance / 2, 0.1f, 1000.0f);
         }
 
         // Setting uniforms that don't change per Planet
@@ -143,16 +143,37 @@ int main(int argc, char** argv)
             angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
             if (planet.getRetrograde())
                 angularvelocity_self = -angularvelocity_self;
-            float angularvelocity_sun = planet.getOrbitalSpeed() / planet.getDistanceFromSun();
+            float angularvelocity_sun = planet.getOrbitalSpeed() / planet.getDistance();
             if (std::isnan(angularvelocity_sun)) // if planet is sun
                 angularvelocity_sun = 0;
 
             // Calculate matrices
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::rotate(model, angularvelocity_sun * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::translate(model, glm::vec3(planet.getDistanceFromSun() * DISTANCE_SCALE, 0.0f, 0.0f));
-            model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::scale(model, glm::vec3(planet.getScale()));
+            if (planet.getName() == "Mond")
+            {
+                const Planet& orbitingPlanet = solarSystem.getPlanets()[planet.getlinkPlanet()];
+                float angularvelocity_orbit = orbitingPlanet.getOrbitalSpeed() / orbitingPlanet.getDistance();
+
+                //Planet to Orbit
+                model = glm::rotate(model, angularvelocity_orbit * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::translate(model, glm::vec3(orbitingPlanet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
+
+                //Orbit of the Moon
+                model = glm::rotate(model, angularvelocity_sun * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::translate(model, glm::vec3(planet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
+
+                //Roatation and scaling of the Moon
+                model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::scale(model, glm::vec3(planet.getScale()));
+            }
+            else
+            {
+                model = glm::rotate(model, angularvelocity_sun * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::translate(model, glm::vec3(planet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
+                model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::scale(model, glm::vec3(planet.getScale()));
+            }
+            
 
             shader.setUniform(modelLoc, model);
 
