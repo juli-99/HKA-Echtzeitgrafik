@@ -22,38 +22,37 @@ uniform PointLight u_Light;
 
 
 void main() {
-
-float ambientStr = 0.1;
-float specularStr = 0.5;
+	float ambientStr = 0.1;
+	float specularStr = 0.5;
 
  
-vec3 norm = normalize(normal);
-vec3 lightDir = normalize(u_Light.pos - fragPos);
+	vec3 norm = normalize(normal);
+	vec3 lightDir = normalize(u_Light.pos - fragPos);
 
-vec3 viewDir = normalize(u_viewPos - fragPos);
+	vec3 viewDir = normalize(u_viewPos - fragPos);
 
-float dist = length(u_Light.pos - fragPos);
-float attenuation = 1.0 / (u_Light.constant + u_Light.lin * dist + u_Light.quad * pow(dist, 2.0));
+	float distance = length(u_Light.pos - fragPos);
+	float attenuation = 1.0 / (u_Light.constant + u_Light.lin * distance + u_Light.quad * pow(distance, 2.0));
 
-float diff = max(dot(norm, lightDir), 0.0);
-vec3 ambient = ambientStr * u_Light.color * attenuation;
+	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 ambient = ambientStr * u_Light.color * attenuation;
 
-vec3 spec = vec3(0.0);
+	vec3 spec = vec3(0.0);
 
-vec3 diffuse = diff * u_Light.color * attenuation;
+	vec3 diffuse = diff * u_Light.color * attenuation;
 
-if (diff > 0.0) {
-vec3 reflectDir = reflect(-lightDir, norm);
-spec = specularStr * pow(max(dot(viewDir, reflectDir), 0.0001), 32) * u_Light.color * attenuation;
-}
+	if (diff > 0.0)
+	{
+		vec3 reflectDir = reflect(-lightDir, norm);
+		spec = specularStr * pow(max(dot(viewDir, reflectDir), 0.0001), 32) * u_Light.color * attenuation;
+	}
 
+	vec3 phong = (ambient + diffuse + spec);
 
+	vec4 texture = texture(u_image, texCoord);
+	vec3 result = texture.rgb;
+	if (u_enablePointLight)
+		 result *= phong;
 
-vec3 phong = (ambient + diffuse + spec);
-vec3 result = texture(u_image, texCoord).rgb;
-if (u_enablePointLight) {
-	 result *= phong;
-}
-
-out_color = vec4(result, 1.0);
+	out_color = vec4(result, texture.a);
 }

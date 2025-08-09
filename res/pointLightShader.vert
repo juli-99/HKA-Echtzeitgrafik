@@ -9,8 +9,8 @@ out vec3 normal;
 out vec3 fragPos;
 out vec2 texCoord;
 void main() {
-gl_Position = u_projection * u_view * u_model * vec4(in_position, 1.0);
-normal = mat3(transpose(inverse(u_model))) * in_normal;
-fragPos = vec3(u_model * vec4(in_position, 1.0));
-texCoord = uv;
+	gl_Position = u_projection * u_view * u_model * vec4(in_position, 1.0);
+	normal = mat3(transpose(inverse(u_model))) * in_normal;
+	fragPos = vec3(u_model * vec4(in_position, 1.0));
+	texCoord = uv;
 };
