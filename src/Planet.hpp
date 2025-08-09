@@ -29,6 +29,13 @@ public:
     bool  getRetrograde() const;
     GeometryBuffer* getGeometry() const;
     int getTextureUnit() const;
+
+    ~Planet();
+    Planet(const Planet&) = delete;
+    Planet& operator=(const Planet&) = delete;
+    Planet(Planet&& other) noexcept;
+    Planet& operator=(Planet&& other) noexcept;
+
     
 private:
     std::string name;

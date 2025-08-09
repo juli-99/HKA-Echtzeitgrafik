@@ -27,6 +27,15 @@ class Texture {
 public:
     Texture(std::filesystem::path fileImage, int unit, GLint mipmapFilter, GLint textureWraper);
     ~Texture();
+   
+
+    // Delete copy semantics (no accidental copy of OpenGL handles)
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
+
+    // Move semantics
+    Texture(Texture&& other) noexcept;
+    Texture& operator=(Texture&& other) noexcept;
 
     int getUnitID() const;
 

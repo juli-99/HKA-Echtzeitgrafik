@@ -22,6 +22,46 @@ Planet::Planet(const std::string& name,
 {
 }
 
+//Deconstructor
+Planet::~Planet() = default;
+
+// Move constructor
+Planet::Planet(Planet&& other) noexcept
+    : name(std::move(other.name)),
+    dayLength(other.dayLength),
+    orbitalSpeed(other.orbitalSpeed),
+    distanceFromSun(other.distanceFromSun),
+    scale(other.scale),
+    retrograde(other.retrograde),
+    geometry(other.geometry),
+    texture(std::move(other.texture))
+{
+    other.geometry = nullptr;
+}
+
+//Move Assignment
+Planet& Planet::operator=(Planet&& other) noexcept {
+    if (this != &other) {
+        name = std::move(other.name);
+        dayLength = other.dayLength;
+        orbitalSpeed = other.orbitalSpeed;
+        distanceFromSun = other.distanceFromSun;
+        scale = other.scale;
+        retrograde = other.retrograde;
+        geometry = other.geometry;
+        texture = std::move(other.texture);
+
+        other.geometry = nullptr;
+    }
+    return *this;
+}
+
+
+
+
+
+
+
 const std::string& Planet::getName() const
 {
     return this->name;
