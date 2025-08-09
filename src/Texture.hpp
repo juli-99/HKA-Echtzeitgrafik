@@ -44,11 +44,4 @@ private:
     GLuint createTexture(ImageData imageData, int unit, GLint mipmapFilter, GLint textureWraper);
     int unitID; 
     GLuint texture;
-
-    //Copy-Konstruktor deaktiviert
-    //Texture(const Texture&) = delete;
-    //Copy-Assignment deaktiviert
-    //Texture& operator=(const Texture&) = delete;
-    //Texture(Texture&& other) noexcept;
-    //Texture& operator=(Texture&& other) noexcept;
 };
