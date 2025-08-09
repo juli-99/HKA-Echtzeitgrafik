@@ -134,7 +134,14 @@ int main(int argc, char** argv)
         shader.setUniform(perspectiveLoc, projection);
         shader.setUniform(viewPosLoc, viewPos);
 
+        const Planet& sun = solarSystem.getPlanets()[0];
+        float angularvelocity_sun = sun.getOrbitalSpeed() / sun.getDistance();
+        float angle_sun = angularvelocity_sun * ORBIT_SPEED_SCALE * currTime;
+        glm::vec3 p(glm::cos(angle_sun), 0, glm::sin(angle_sun));
+        pointLight.setPos(p* sun.getDistance()* DISTANCE_SCALE);
+
         pointLight.applyToShader(shader, POINTLIGHT_RANGE);
+
 
         for (const Planet& planet : solarSystem.getPlanets())
         {
@@ -170,6 +177,22 @@ int main(int argc, char** argv)
             
 
             shader.setUniform(modelLoc, model);
+
+
+            if (planet.getName() == "Sonne")
+            {
+                /*
+                glm::vec4 a = glm::vec4(planet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f, 1.0f);
+                glm::mat4 m = glm::mat4(1.0f);
+                a = a * glm::rotate(m, angularvelocity_orbit * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+                */
+                //float angle_sun = angularvelocity_orbit * ORBIT_SPEED_SCALE * currTime;
+                //glm::vec3 p(glm::sin(angle_sun), 0, glm::cos(angle_sun));
+                //pointLight.setPos(p* planet.getDistance()* DISTANCE_SCALE);
+            }
+
+            //pointLight.applyToShader(shader, POINTLIGHT_RANGE);
+
 
             // Setting image
             shader.setUniform(imageLoc, planet.getTextureUnit());

@@ -20,14 +20,14 @@ static const struct PlanetData {
     int unitID;
     
 } planetData[] = {
-    { "Sonne",   36000,   0.0f,    0.0f, 0.9f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
+    { "Sonne",   36000, 29.78f,  149.6f, 0.9f, false, 3, fs::path(ROOT_DIR) / "res/textures/2k_sun.jpg", 0},
     { "Merkur",  84456, 47.87f,   57.9f, 0.2f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_mercury.jpg", 1},
-    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true, 0,  fs::path(ROOT_DIR) / "res/textures/2k_venus.jpg", 2},
-    { "Erde",     1436, 29.78f,  149.6f, 0.5f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg", 3},
+    { "Venus",  349947, 35.02f,  108.2f, 0.4f, true,  0, fs::path(ROOT_DIR) / "res/textures/2k_venus.jpg", 2},
+    { "Erde",     1436,   0.0f,    0.0f, 0.5f, false, 3, fs::path(ROOT_DIR) / "res/textures/2k_earth.jpg", 3},
     { "Mars",     1477, 24.08f,  227.9f, 0.3f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_mars.jpg", 4},
     { "Jupiter",   595, 13.07f,  778.6f, 1.0f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_jupiter.jpg", 5},
     { "Saturn",    647,  9.69f, 1433.5f, 0.9f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_saturn.jpg", 6},
-    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true, 0,  fs::path(ROOT_DIR) / "res/textures/2k_uranus.jpg", 7},
+    { "Uranus",   1034,  6.81f, 2872.5f, 0.8f, true,  0, fs::path(ROOT_DIR) / "res/textures/2k_uranus.jpg", 7},
     { "Neptun",    966,  5.43f, 4495.1f, 0.8f, false, 0, fs::path(ROOT_DIR) / "res/textures/2k_neptune.jpg", 8},
     { "Mond",    1436,  39.78f, 25.5f, 0.135f, false, 3, fs::path(ROOT_DIR) / "res/textures/2k_moon.jpg", 9 } // Distance to Earth is not correct
 };
