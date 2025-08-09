@@ -9,10 +9,12 @@ Shader::Shader(const std::filesystem::path fileFrag, const std::filesystem::path
         std::string reFragmentSource = loadShaderSource(fileFrag.string());
 
 
-        if (reVertexSource.empty()) {
+        if (reVertexSource.empty())
+        {
             std::cerr << "Vertex shader source is empty! Path: " << fileVert << std::endl;
         }
-        if (reFragmentSource.empty()) {
+        if (reFragmentSource.empty())
+        {
             std::cerr << "Fragment shader source is empty! Path: " << fileFrag << std::endl;
         }
 

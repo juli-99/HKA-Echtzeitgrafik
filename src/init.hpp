@@ -9,8 +9,8 @@ GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext =
 {
     GLFWwindow* window; //create new Window
 
-    if (glfwInit() == 0) { //Create Window faild?	
-
+    if (glfwInit() == 0) //Create Window faild?	
+    {
         std::cerr << "GLFW faild to initiate." << std::endl;
     }
 
@@ -23,13 +23,15 @@ GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext =
     window = glfwCreateWindow(width, height, "Echtzeitgrafik-Projekt", nullptr, nullptr);
 
     //checking id window was created successfully
-    if (window == nullptr) {
+    if (window == nullptr)
+    {
         std::cerr << "GLFW failed to create window." << std::endl;
         exit(EXIT_FAILURE);
     }
     //initialize glew
     glfwMakeContextCurrent(window);
-    if (glewInit() != GLEW_OK) {
+    if (glewInit() != GLEW_OK)
+    {
         std::cerr << "GLFW failed to create window." << std::endl;
         glfwTerminate();
         exit(EXIT_FAILURE);
@@ -37,7 +39,8 @@ GLFWwindow* initAndCreateWindow(GLuint width, GLuint height, bool debugContext =
 
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    {
 
         //initialize debug output
         auto debugCallback = [](

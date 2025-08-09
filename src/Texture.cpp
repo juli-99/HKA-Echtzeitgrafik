@@ -13,8 +13,9 @@ Texture::Texture(std::filesystem::path fileImage, int unit, GLint textureFilter,
 
 Texture::~Texture()
 {
-    if (texture != 0) {
-        glDeleteTextures(1, &texture);
+    if (this->texture != 0)
+    {
+        glDeleteTextures(1, &this->texture);
     }
 }
 
@@ -28,12 +29,14 @@ Texture::Texture(Texture&& other) noexcept
 
 // Move Assignment
 Texture& Texture::operator=(Texture&& other) noexcept {
-    if (this != &other) {
-        if (texture != 0) {
-            glDeleteTextures(1, &texture);
+    if (this != &other)
+    {
+        if (this->texture != 0)
+        {
+            glDeleteTextures(1, &this->texture);
         }
-        texture = other.texture;
-        unitID = other.unitID;
+        this->texture = other.texture;
+        this->unitID = other.unitID;
 
         other.texture = 0;
         other.unitID = -1;

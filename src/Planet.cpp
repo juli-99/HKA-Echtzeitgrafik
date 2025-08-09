@@ -41,26 +41,21 @@ Planet::Planet(Planet&& other) noexcept
 
 //Move Assignment
 Planet& Planet::operator=(Planet&& other) noexcept {
-    if (this != &other) {
-        name = std::move(other.name);
-        dayLength = other.dayLength;
-        orbitalSpeed = other.orbitalSpeed;
-        distanceFromSun = other.distanceFromSun;
-        scale = other.scale;
-        retrograde = other.retrograde;
-        geometry = other.geometry;
-        texture = std::move(other.texture);
+    if (this != &other)
+    {
+        this->name = std::move(other.name);
+        this->dayLength = other.dayLength;
+        this->orbitalSpeed = other.orbitalSpeed;
+        this->distanceFromSun = other.distanceFromSun;
+        this->scale = other.scale;
+        this->retrograde = other.retrograde;
+        this->geometry = other.geometry;
+        this->texture = std::move(other.texture);
 
         other.geometry = nullptr;
     }
     return *this;
 }
-
-
-
-
-
-
 
 const std::string& Planet::getName() const
 {

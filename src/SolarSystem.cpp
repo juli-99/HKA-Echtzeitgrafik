@@ -57,7 +57,8 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
         aiProcess_SortByPType | aiProcess_PreTransformVertices);
 
     // If the import failed, report it
-    if (!scene) {
+    if (!scene)
+    {
         std::cerr << "Importing of 3D scene failed: " << importer.GetErrorString() << std::endl;
         return;
     }
@@ -68,7 +69,8 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
-    for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+    for (unsigned int j = 0; j < mesh->mNumVertices; j++)
+    {
         // Copy the vertex data into the vector "vertices"
         aiVector3D& v = mesh->mVertices[j];
         vertices.push_back(v.x);
@@ -96,18 +98,21 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
             vertices.push_back(uv.x); // U
             vertices.push_back(uv.y); // V
         }
-        else {
+        else
+        {
             vertices.push_back(0.0f); // default U
             vertices.push_back(0.0f); // default V
         }
     }
 
-    for (unsigned int k = 0; k < mesh->mNumFaces; k++) {
+    for (unsigned int k = 0; k < mesh->mNumFaces; k++)
+    {
         aiFace& face = mesh->mFaces[k];
         // Copy the index values to the vector "indices" above
         // We can assume that there are only 3 indices per face
         // because we set the aiProcess_Triangulate flag during the import.
-        for (unsigned int j = 0; j < face.mNumIndices; j++) {
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+        {
             indices.push_back(face.mIndices[j]);
         }
     }
@@ -126,7 +131,8 @@ void SolarSystem::loadMeshFromFile(const std::filesystem::path& spherePath)
 void SolarSystem::initPlanets()
 {
     //this->planets.reserve(sizeof(planetData) / sizeof(planetData[0]));
-    for (const auto& data : planetData) {
+    for (const auto& data : planetData)
+    {
         this->planets.emplace_back(
             data.name,
             data.dayLength,

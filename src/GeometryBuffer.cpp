@@ -4,14 +4,10 @@
 GeometryBuffer::GeometryBuffer(bool useElementBuffer)
     : vao(0), vbo(0), ebo(0), eboActive(useElementBuffer), vertexSize(0), indicesSize(0)
 {
-    glGenVertexArrays(1, &vao);
-  
-    glGenBuffers(1, &vbo); //1 for 1 Buffer for the Object, Reference
-
-    if (eboActive) {
-        glGenBuffers(1, &ebo);
-        
-    }
+    glGenVertexArrays(1, &this->vao);
+    glGenBuffers(1, &this->vbo); //1 for 1 Buffer for the Object, Reference
+    if (this->eboActive)
+        glGenBuffers(1, &this->ebo);
 }
 
 //Move-Assignment
@@ -51,7 +47,6 @@ GeometryBuffer::GeometryBuffer(GeometryBuffer&& other) noexcept
     other.vbo = 0;
     other.ebo = 0;
     other.eboActive = false;
-
 }
 
 GeometryBuffer::~GeometryBuffer()
@@ -59,14 +54,13 @@ GeometryBuffer::~GeometryBuffer()
     if (this->eboActive && this->ebo != 0)
         glDeleteBuffers(1, &this->ebo);
     if (this->vbo != 0)
-    glDeleteBuffers(1, &this->vbo);
+        glDeleteBuffers(1, &this->vbo);
     if (this->vao != 0)
-    glDeleteVertexArrays(1, &this->vao);
+        glDeleteVertexArrays(1, &this->vao);
 }
 
 void GeometryBuffer::uploadVertexData(const void* data, GLsizeiptr size, GLenum usage)
 {
-
     vertexSize = size;
 
     /*We create a Buffer, everytime we fire a function that modify data of the object -> it will change the binded object */
@@ -83,7 +77,6 @@ void GeometryBuffer::uploadIndexData(const void* data, GLsizeiptr size, GLenum u
 
     this->indicesSize = size;
     
-
     glBindVertexArray(this->vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
@@ -127,4 +120,3 @@ void GeometryBuffer::setSizeVertex(GLsizei size)
 {
     this->indicesSize = size;
 }
-

@@ -123,7 +123,8 @@ int main(int argc, char** argv)
         glm::mat4 projection;
         if (isPerspective)
             projection = glm::perspective(glm::radians(45.0f), float(WIDTH) / float(HEIGHT), 0.1f, 1000.0f);
-        else {
+        else
+        {
             float tmpDist = distance / 9; // fix scaling
             projection = glm::ortho(-4.0f * tmpDist, 4.0f * tmpDist, -3.0f * tmpDist, 3.0f * tmpDist, 0.1f, 1000.0f);
         }
