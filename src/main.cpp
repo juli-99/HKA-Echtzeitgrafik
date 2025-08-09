@@ -138,41 +138,35 @@ int main(int argc, char** argv)
 
         for (const Planet& planet : solarSystem.getPlanets())
         {
+            const Planet& planetToOrbit = solarSystem.getPlanets()[planet.getlinkPlanet()];
 
-            float angularvelocity_self = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
-            angularvelocity_self *= 1e7f; // to bring to same same scale as OrbitalSpeed
+            float angularvelocity_rotation = (2 * glm::pi<float>()) / (60 * planet.getDayLength());
+            angularvelocity_rotation *= 1e7f; // to bring to same same scale as OrbitalSpeed
             if (planet.getRetrograde())
-                angularvelocity_self = -angularvelocity_self;
-            float angularvelocity_sun = planet.getOrbitalSpeed() / planet.getDistance();
-            if (std::isnan(angularvelocity_sun)) // if planet is sun
-                angularvelocity_sun = 0;
+                angularvelocity_rotation = -angularvelocity_rotation;
 
-            // Calculate matrices
+            float angularvelocity_orbit = planet.getOrbitalSpeed() / planet.getDistance();
+            if (std::isnan(angularvelocity_orbit)) // if planet is sun
+                angularvelocity_orbit = 0;
+
+            float angularvelocity_planetToOrbit = planetToOrbit.getOrbitalSpeed() / planetToOrbit.getDistance();
+            if (std::isnan(angularvelocity_planetToOrbit)) // if planet is sun
+                angularvelocity_planetToOrbit = 0;
+
+            // calculate model matrices
             glm::mat4 model = glm::mat4(1.0f);
-            if (planet.getName() == "Mond")
-            {
-                const Planet& orbitingPlanet = solarSystem.getPlanets()[planet.getlinkPlanet()];
-                float angularvelocity_orbit = orbitingPlanet.getOrbitalSpeed() / orbitingPlanet.getDistance();
 
-                //Planet to Orbit
-                model = glm::rotate(model, angularvelocity_orbit * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::translate(model, glm::vec3(orbitingPlanet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
+            // planet to orbit
+            model = glm::rotate(model, angularvelocity_planetToOrbit * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(planetToOrbit.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
 
-                //Orbit of the Moon
-                model = glm::rotate(model, angularvelocity_sun * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::translate(model, glm::vec3(planet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
+            // orbit of the planet
+            model = glm::rotate(model, angularvelocity_orbit * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(planet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
 
-                //Roatation and scaling of the Moon
-                model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::scale(model, glm::vec3(planet.getScale()));
-            }
-            else
-            {
-                model = glm::rotate(model, angularvelocity_sun * ORBIT_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::translate(model, glm::vec3(planet.getDistance() * DISTANCE_SCALE, 0.0f, 0.0f));
-                model = glm::rotate(model, angularvelocity_self * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::scale(model, glm::vec3(planet.getScale()));
-            }
+            // roatation and scaling of the planet
+            model = glm::rotate(model, angularvelocity_rotation * ROTATION_SPEED_SCALE * currTime, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(planet.getScale()));
             
 
             shader.setUniform(modelLoc, model);
