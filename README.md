@@ -16,3 +16,13 @@ Die Umsetzung erfolgte in Gruppenarbeit mit jeweils zwei Personen.
 - Leertaste: Wechselt zwischen der orthogonalen und der perspektivischen Ansicht
 - Mausrad: Zoom (ein- und aus) 
 
+## Verwendete Bibliotheken:
+
+/lib  
+- assimp.lib  
+- freetype.lib  
+- glew32s.lib  
+- glfw3.lib  
+
+/dll  
+- assimp.dll
