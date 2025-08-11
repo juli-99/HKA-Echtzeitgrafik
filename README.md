@@ -3,11 +3,11 @@
 ## Beschreibung:
 
 Im Sommersemester 2025 wurde in diesem Anwendungsprojekt ein Sonnensystem mit OpenGL entwickelt. 
-In der zugehˆrigen Lehrveranstaltung wurden zun‰chst alle grundlegenden Werkzeuge von OpenGL vermittelt und anschlieﬂend in diesem Projekt angewendet. 
+In der zugeh√∂rigen Lehrveranstaltung wurden zun√§chst alle grundlegenden Werkzeuge von OpenGL vermittelt und anschlie√üend in diesem Projekt angewendet. 
 Die Umsetzung erfolgte in Gruppenarbeit mit jeweils zwei Personen.
 
 
-![gif](https://github.com/juli-99/HKA-Echtzeitgrafik/tree/main/gif/example.gif)
+![gif](https://github.com/juli-99/HKA-Echtzeitgrafik/blob/main/gif/example.gif)
 
 
 ## Steuerung:
