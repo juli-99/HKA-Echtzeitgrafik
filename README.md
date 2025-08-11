@@ -7,7 +7,7 @@ In der zugehörigen Lehrveranstaltung wurden zunächst alle grundlegenden Werkzeug
 Die Umsetzung erfolgte in Gruppenarbeit mit jeweils zwei Personen.
 
 
-![gif](https://github.com/juli-99/HKA-Echtzeitgrafik/blob/main/gifs/example.gif)
+![gif](https://github.com/juli-99/HKA-Echtzeitgrafik/tree/main/gif/example.gif)
 
 
 ## Steuerung:
